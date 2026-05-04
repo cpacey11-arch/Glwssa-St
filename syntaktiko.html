@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Συντακτικό – Τα Συστατικά της Πρότασης</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --blue-mid: #93c5fd;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --yellow: #ca8a04;
+    --yellow-light: #fef9c3;
+    --purple: #7c3aed;
+    --purple-light: #ede9fe;
+    --orange: #ea580c;
+    --orange-light: #ffedd5;
+    --pink: #db2777;
+    --pink-light: #fce7f3;
+    --gray: #6b7280;
+    --gray-light: #f3f4f6;
+    --border: #e5e7eb;
+    --text: #1f2937;
+    --bg: #f8faff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 60%, #06b6d4 100%);
+    color: white;
+    padding: 28px 32px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .site-header h1 {
+    font-size: 1.9rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .site-header .subtitle {
+    font-size: 1rem;
+    opacity: 0.85;
+    margin-top: 4px;
+    font-weight: 600;
+    position: relative;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: white;
+    border-bottom: 2px solid var(--border);
+    padding: 0 24px;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 14px 20px;
+    border: none;
+    background: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* SECTIONS */
+  .section { display: none; padding: 28px 24px; max-width: 900px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* THEORY CARDS */
+  .theory-card {
+    background: white;
+    border-radius: 16px;
+    border: 2px solid var(--border);
+    padding: 22px 24px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .theory-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px; height: 100%;
+    border-radius: 16px 0 0 16px;
+  }
+  .card-blue::before { background: var(--blue); }
+  .card-green::before { background: var(--green); }
+  .card-purple::before { background: var(--purple); }
+  .card-orange::before { background: var(--orange); }
+  .card-pink::before { background: var(--pink); }
+
+  .theory-card h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-blue h2 { color: var(--blue); }
+  .card-green h2 { color: var(--green); }
+  .card-purple h2 { color: var(--purple); }
+  .card-orange h2 { color: var(--orange); }
+  .card-pink h2 { color: var(--pink); }
+
+  .theory-card p, .theory-card li {
+    font-size: 0.97rem;
+    line-height: 1.7;
+    color: #374151;
+  }
+  .theory-card ul { padding-left: 20px; margin-top: 6px; }
+  .theory-card li { margin-bottom: 4px; }
+
+  /* EXAMPLE SENTENCE DISPLAY */
+  .example-box {
+    background: var(--gray-light);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    font-size: 0.95rem;
+  }
+  .example-box .sentence { font-weight: 800; font-size: 1.05rem; margin-bottom: 8px; }
+  .tags-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .tag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .tag-ypok { background: #dbeafe; color: #1d4ed8; }
+  .tag-rima { background: #d1fae5; color: #065f46; }
+  .tag-ant { background: #fce7f3; color: #9d174d; }
+  .tag-kat { background: #ede9fe; color: #5b21b6; }
+  .tag-emmeso { background: #ffedd5; color: #9a3412; }
+
+  /* HIGHLIGHT in text */
+  .hl { font-weight: 800; }
+  .hl-blue { color: var(--blue); }
+  .hl-green { color: var(--green); }
+  .hl-red { color: var(--red); }
+  .hl-purple { color: var(--purple); }
+  .hl-orange { color: var(--orange); }
+
+  /* DEFINITION BOX */
+  .def-box {
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 10px 0;
+    font-size: 0.93rem;
+  }
+  .def-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .def-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .def-purple { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .def-orange { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .def-yellow { background: var(--yellow-light); border-left: 4px solid var(--yellow); }
+
+  /* MEMORY BOX */
+  .memory-box {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border: 2px solid #f59e0b;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin: 16px 0;
+  }
+  .memory-box h3 { color: #92400e; font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+  .memory-box p { color: #78350f; font-size: 0.93rem; line-height: 1.6; }
+  .formula {
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    color: #1e40af;
+    display: block;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+
+  /* EXERCISE SECTIONS */
+  .ex-section {
+    background: white;
+    border-radius: 16px;
+    border: 2px solid var(--border);
+    padding: 22px 24px;
+    margin-bottom: 24px;
+  }
+  .ex-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+  }
+  .ex-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: white;
+    flex-shrink: 0;
+  }
+  .bg-blue { background: var(--blue); }
+  .bg-green { background: var(--green); }
+  .bg-purple { background: var(--purple); }
+  .bg-orange { background: var(--orange); }
+  .bg-pink { background: var(--pink); }
+
+  /* DRAG & DROP MATCH */
+  .match-container { display: flex; gap: 20px; flex-wrap: wrap; }
+  .match-col { flex: 1; min-width: 200px; }
+  .match-col h4 { font-size: 0.85rem; font-weight: 700; color: var(--gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .match-item {
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 0.93rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+  }
+  .match-sentence { background: #f0f9ff; border-color: #bae6fd; }
+  .match-sentence:hover { background: #e0f2fe; }
+  .match-sentence.selected { border-color: var(--blue); background: #dbeafe; }
+  .match-type { background: var(--gray-light); border-color: var(--border); }
+  .match-type:hover { background: #e5e7eb; }
+  .match-type.matched-1 { background: #d1fae5; border-color: #6ee7b7; color: #065f46; }
+  .match-type.matched-2 { background: #dbeafe; border-color: #93c5fd; color: #1d4ed8; }
+  .match-type.matched-3 { background: #ede9fe; border-color: #c4b5fd; color: #5b21b6; }
+  .match-type.matched-4 { background: #ffedd5; border-color: #fed7aa; color: #9a3412; }
+
+  /* RADIO SELECT */
+  .radio-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .radio-opt {
+    padding: 8px 14px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .radio-opt:hover { border-color: var(--blue); color: var(--blue); }
+  .radio-opt.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .radio-opt.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .radio-opt.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+
+  /* SENTENCE ITEMS */
+  .sentence-item {
+    background: #f8faff;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .sentence-item .sent-text { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; }
+  .sentence-item .sent-text em { font-style: normal; text-decoration: underline; text-decoration-color: #93c5fd; }
+
+  /* FILL BLANK */
+  .fill-item {
+    background: #f8faff;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .fill-item label { font-weight: 700; font-size: 0.95rem; flex: 1; min-width: 200px; }
+  .fill-select {
+    padding: 6px 10px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: white;
+    cursor: pointer;
+    min-width: 180px;
+  }
+  .fill-select:focus { outline: none; border-color: var(--blue); }
+  .fill-select.correct { border-color: var(--green); background: var(--green-light); }
+  .fill-select.wrong { border-color: var(--red); background: var(--red-light); }
+
+  /* WORD ROLE */
+  .word-role-item {
+    background: #f8faff;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .word-role-sent { font-size: 0.97rem; font-weight: 600; margin-bottom: 10px; line-height: 1.6; }
+  .word-role-sent strong { color: var(--blue); }
+  .roles-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .role-chip {
+    padding: 5px 12px;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: white;
+  }
+  .role-chip:hover { border-color: var(--blue); }
+  .role-chip.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .role-chip.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .role-chip.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+
+  /* FEEDBACK */
+  .feedback {
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-top: 6px;
+    display: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .feedback.show { display: inline-block; }
+  .feedback.ok { background: var(--green-light); color: var(--green); }
+  .feedback.err { background: var(--red-light); color: var(--red); }
+
+  /* BUTTONS */
+  .btn-row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-check { background: var(--blue); color: white; }
+  .btn-check:hover { background: #1d4ed8; }
+  .btn-reset { background: var(--gray-light); color: var(--gray); }
+  .btn-reset:hover { background: #e5e7eb; }
+
+  /* SCORE */
+  .score-box {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .score-num { font-size: 1.8rem; font-weight: 900; color: var(--blue); }
+  .score-label { font-size: 0.88rem; font-weight: 600; color: var(--gray); }
+
+  /* ORDER EXERCISE */
+  .order-sentence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px;
+    background: #f0f9ff;
+    border: 2px dashed #93c5fd;
+    border-radius: 12px;
+    min-height: 52px;
+    margin: 10px 0;
+  }
+  .order-word {
+    padding: 6px 14px;
+    background: white;
+    border: 2px solid #93c5fd;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: grab;
+    user-select: none;
+    transition: all 0.15s;
+  }
+  .order-word:hover { border-color: var(--blue); background: var(--blue-light); }
+  .order-word.dragging { opacity: 0.4; }
+
+  /* TRUE/FALSE */
+  .tf-item {
+    background: #f8faff;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .tf-sent { font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; }
+  .tf-btns { display: flex; gap: 8px; }
+  .tf-btn {
+    padding: 5px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    background: white;
+    font-family: 'Nunito', sans-serif;
+    transition: all 0.15s;
+  }
+  .tf-btn:hover { border-color: var(--blue); }
+  .tf-btn.selected-t { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .tf-btn.selected-f { border-color: var(--orange); background: var(--orange-light); color: var(--orange); }
+  .tf-btn.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .tf-btn.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+
+  /* FOOTER */
+  .site-footer {
+    text-align: right;
+    padding: 16px 24px;
+    font-size: 0.78rem;
+    color: #9ca3af;
+    font-weight: 600;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+
+  /* PRINT */
+  @media print {
+    .tabs, .btn-row, .btn, .site-footer { display: none !important; }
+    .section { display: block !important; page-break-inside: avoid; }
+    body { background: white; }
+  }
+
+  @media (max-width: 600px) {
+    .site-header { padding: 20px 16px; }
+    .site-header h1 { font-size: 1.4rem; }
+    .section { padding: 20px 14px; }
+    .match-container { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>📚 Συντακτικό – Τα Συστατικά της Πρότασης</h1>
+  <div class="subtitle">ΣΤ΄ Δημοτικού &nbsp;|&nbsp; Γλώσσα</div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" onclick="showTab('theory')">📖 Θεωρία</button>
+  <button class="tab-btn" onclick="showTab('ex1')">✏️ Άσκηση 1</button>
+  <button class="tab-btn" onclick="showTab('ex2')">✏️ Άσκηση 2</button>
+  <button class="tab-btn" onclick="showTab('ex3')">✏️ Άσκηση 3</button>
+  <button class="tab-btn" onclick="showTab('ex4')">✏️ Άσκηση 4</button>
+  <button class="tab-btn" onclick="showTab('ex5')">✏️ Άσκηση 5</button>
+</nav>
+
+<!-- ===== THEORY ===== -->
+<section id="theory" class="section active">
+
+  <div class="theory-card card-blue">
+    <h2>🔵 Μεταβατικά και αμετάβατα ρήματα</h2>
+    <div class="def-blue">
+      <strong>Μεταβατικά</strong> λέγονται τα ρήματα που παίρνουν αντικείμενο (ή αντικείμενα) ως απαραίτητο συμπλήρωμα της σημασίας τους.
+    </div>
+    <div class="def-green" style="margin-top:8px;">
+      <strong>Αμετάβατα</strong> λέγονται τα ρήματα που <em>δεν</em> χρειάζονται αντικείμενο για να ολοκληρώσουν την έννοιά τους.
+    </div>
+    <div class="example-box">
+      <div class="sentence">Το αεροπλάνο προσγειώθηκε.</div>
+      <div class="tags-row">
+        <span class="tag tag-ypok">Υποκείμενο: το αεροπλάνο</span>
+        <span class="tag tag-rima">Ρήμα αμετάβατο: προσγειώθηκε</span>
+      </div>
+    </div>
+    <div class="example-box">
+      <div class="sentence">Ο Θανάσης οδηγούσε ένα παλιό φορτηγό.</div>
+      <div class="tags-row">
+        <span class="tag tag-ypok">Υποκείμενο: ο Θανάσης</span>
+        <span class="tag tag-rima">Ρήμα μεταβατικό: οδηγούσε</span>
+        <span class="tag tag-ant">Αντικείμενο: ένα παλιό φορτηγό</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="theory-card card-green">
+    <h2>🟢 Μονόπτωτα και δίπτωτα ρήματα</h2>
+    <p>Τα μεταβατικά ρήματα μπορεί να είναι:</p>
+    <ul style="margin-top:8px;">
+      <li><span class="hl hl-green">Μονόπτωτα</span> – παίρνουν <strong>ένα</strong> αντικείμενο (άμεσο)</li>
+      <li><span class="hl hl-blue">Δίπτωτα</span> – παίρνουν <strong>δύο</strong> αντικείμενα (άμεσο + έμμεσο)</li>
+    </ul>
+    <div class="example-box">
+      <div class="sentence">Ο παππούς μού έφτιαξε ένα χαρταετό.</div>
+      <div class="tags-row">
+        <span class="tag tag-ypok">Υποκείμενο: ο παππούς</span>
+        <span class="tag tag-rima">Ρήμα δίπτωτο: έφτιαξε</span>
+        <span class="tag tag-emmeso">Αντικ. (έμμεσο): μου</span>
+        <span class="tag tag-ant">Αντικ. (άμεσο): ένα χαρταετό</span>
+      </div>
+    </div>
+    <div class="def-yellow" style="margin-top:10px;">
+      <strong>Άμεσο αντικείμενο</strong> → αιτιατική → ερώτηση <strong>«τι;»</strong><br>
+      <strong>Έμμεσο αντικείμενο</strong> → γενική ή αιτιατική → ερώτηση <strong>«σε ποιον;»</strong> / <strong>«ποιον;»</strong>
+    </div>
+  </div>
+
+  <div class="theory-card card-purple">
+    <h2>🟣 Συνδετικά ρήματα και κατηγορούμενο</h2>
+    <p>Μερικά ρήματα συνδέουν το υποκείμενο με ένα επίθετο ή ουσιαστικό που δίνει μια <strong>ιδιότητα</strong> του υποκειμένου. Τα ρήματα αυτά λέγονται <span class="hl hl-purple">συνδετικά</span> και το επίθετο/ουσιαστικό λέγεται <span class="hl hl-purple">κατηγορούμενο</span>.</p>
+    <div class="example-box">
+      <div class="sentence">Ο νέος προπονητής φαίνεται αυστηρός.</div>
+      <div class="tags-row">
+        <span class="tag tag-ypok">Υποκείμενο: ο νέος προπονητής</span>
+        <span class="tag tag-rima">Ρήμα συνδετικό: φαίνεται</span>
+        <span class="tag tag-kat">Κατηγορούμενο: αυστηρός</span>
+      </div>
+    </div>
+    <div class="def-purple" style="margin-top:10px;">
+      <strong>Συχνά συνδετικά ρήματα:</strong> εἶμαι, γίνομαι, φαίνομαι, εμφανίζομαι, παρουσιάζομαι, πάω για, διορίζομαι, λέγομαι, ονομάζομαι, θεωρούμαι κ.τλ.
+    </div>
+  </div>
+
+  <div class="theory-card card-orange">
+    <h2>🟠 Η σειρά των συστατικών της πρότασης</h2>
+    <p>Η πιο ουδέτερη σειρά των συστατικών σε μια πρόταση είναι:</p>
+    <div class="memory-box">
+      <h3>💡 Θυμάμαι πάντα…</h3>
+      <span class="formula">Υποκείμενο – Ρήμα – Αντικείμενο (Υ – Ρ – Α)</span>
+      <span class="formula">ή: Ρήμα – Υποκείμενο – Αντικείμενο (Ρ – Υ – Α)</span>
+      <p style="margin-top:8px;">Αν θέλουμε να <strong>τονίσουμε</strong> κάποιο στοιχείο, το φέρνουμε στην αρχή!</p>
+    </div>
+    <div class="example-box">
+      <div class="sentence">Ο Κώστας έπιασε μια τεράστια πέστροφα.</div>
+      <p style="margin-top:6px; font-size:0.9rem;">→ Όλες οι σειρές βγάζουν νόημα, αλλά κάθε μία δίνει διαφορετική έμφαση!</p>
+    </div>
+  </div>
+
+  <div class="theory-card card-pink">
+    <h2>🩷 Σύνοψη: Τύποι δομής πρότασης</h2>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse: collapse; font-size:0.9rem; margin-top:8px;">
+        <thead>
+          <tr style="background:#fce7f3;">
+            <th style="padding:8px 10px; text-align:left; border:1px solid #fbcfe8; color:#9d174d;">Τύπος</th>
+            <th style="padding:8px 10px; text-align:left; border:1px solid #fbcfe8; color:#9d174d;">Δομή</th>
+            <th style="padding:8px 10px; text-align:left; border:1px solid #fbcfe8; color:#9d174d;">Παράδειγμα</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:white;">
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;"><strong>Αμετάβατο</strong></td>
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;">Υ – Ρ</td>
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;">Το πουλί τραγούδησε.</td>
+          </tr>
+          <tr style="background:#fdf2f8;">
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;"><strong>Μεταβατικό μονόπτωτο</strong></td>
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;">Υ – Ρ – Αντ.</td>
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;">Ο Θανάσης οδηγεί φορτηγό.</td>
+          </tr>
+          <tr style="background:white;">
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;"><strong>Μεταβατικό δίπτωτο</strong></td>
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;">Υ – Ρ – Αντ.Άμεσο – Αντ.Έμμεσο</td>
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;">Ο παππούς μού έφτιαξε χαρταετό.</td>
+          </tr>
+          <tr style="background:#fdf2f8;">
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;"><strong>Συνδετικό</strong></td>
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;">Υ – Ρ – Κατηγ.</td>
+            <td style="padding:8px 10px; border:1px solid #fbcfe8;">Ο νέος προπονητής φαίνεται αυστηρός.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== EXERCISE 1: Match sentence to structure ===== -->
+<section id="ex1" class="section">
+  <div class="ex-section">
+    <div class="ex-title">
+      <span class="ex-num bg-blue">1</span>
+      Αντιστοίχισε κάθε πρόταση με τον σωστό τύπο δομής.
+    </div>
+    <p style="font-size:0.88rem; color:var(--gray); margin-bottom:16px;">Κλικ στην πρόταση και μετά στον τύπο που ταιριάζει.</p>
+
+    <div class="match-container">
+      <div class="match-col">
+        <h4>Προτάσεις</h4>
+        <div class="match-item match-sentence" id="ms1" onclick="selectSentence('ms1', 3)">Ο Θανάσης οδηγούσε ένα παλιό φορτηγό.</div>
+        <div class="match-item match-sentence" id="ms2" onclick="selectSentence('ms2', 1)">Ο νέος προπονητής φαίνεται αυστηρός.</div>
+        <div class="match-item match-sentence" id="ms3" onclick="selectSentence('ms3', 2)">Τα φύλλα έπεσαν απαλά.</div>
+        <div class="match-item match-sentence" id="ms4" onclick="selectSentence('ms4', 2)">Το πουλί τραγούδησε.</div>
+        <div class="match-item match-sentence" id="ms5" onclick="selectSentence('ms5', 3)">Η Ελένη διάβασε ένα χοντρό βιβλίο.</div>
+        <div class="match-item match-sentence" id="ms6" onclick="selectSentence('ms6', 4)">Ο παππούς έφτιαξε στον Γιώργη έναν χαρταετό.</div>
+      </div>
+      <div class="match-col">
+        <h4>Τύπος δομής</h4>
+        <div class="match-item match-type" id="mt1" onclick="selectType('mt1')">1. Υ – Ρ – Κατηγορούμενο</div>
+        <div class="match-item match-type" id="mt2" onclick="selectType('mt2')">2. Υ – Ρ (αμετάβατο)</div>
+        <div class="match-item match-type" id="mt3" onclick="selectType('mt3')">3. Υ – Ρ – Αντικείμενο</div>
+        <div class="match-item match-type" id="mt4" onclick="selectType('mt4')">4. Υ – Ρ – Αντικ.Άμεσο – Αντικ.Έμμεσο</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkEx1()">✔ Έλεγχος</button>
+      <button class="btn btn-reset" onclick="resetEx1()">↺ Επαναφορά</button>
+    </div>
+
+    <div id="score1" class="score-box" style="display:none;">
+      <span class="score-num" id="score1-num">0/6</span>
+      <div>
+        <div class="score-label">Σωστές απαντήσεις</div>
+        <div id="score1-msg" style="font-size:0.85rem; font-weight:700; color:var(--gray);"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EXERCISE 2: Choose verb type ===== -->
+<section id="ex2" class="section">
+  <div class="ex-section">
+    <div class="ex-title">
+      <span class="ex-num bg-green">2</span>
+      Χαρακτήρισε το ρήμα κάθε πρότασης (μεταβατικό / αμετάβατο / συνδετικό).
+    </div>
+
+    <div id="ex2-items"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkEx2()">✔ Έλεγχος</button>
+      <button class="btn btn-reset" onclick="resetEx2()">↺ Επαναφορά</button>
+    </div>
+    <div id="score2" class="score-box" style="display:none;">
+      <span class="score-num" id="score2-num">0/6</span>
+      <div>
+        <div class="score-label">Σωστές απαντήσεις</div>
+        <div id="score2-msg" style="font-size:0.85rem; font-weight:700; color:var(--gray);"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EXERCISE 3: Identify role of underlined word ===== -->
+<section id="ex3" class="section">
+  <div class="ex-section">
+    <div class="ex-title">
+      <span class="ex-num bg-purple">3</span>
+      Αναγνώρισε τον συντακτικό ρόλο της έντονης λέξης σε κάθε πρόταση.
+    </div>
+
+    <div id="ex3-items"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkEx3()">✔ Έλεγχος</button>
+      <button class="btn btn-reset" onclick="resetEx3()">↺ Επαναφορά</button>
+    </div>
+    <div id="score3" class="score-box" style="display:none;">
+      <span class="score-num" id="score3-num">0/7</span>
+      <div>
+        <div class="score-label">Σωστές απαντήσεις</div>
+        <div id="score3-msg" style="font-size:0.85rem; font-weight:700; color:var(--gray);"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EXERCISE 4: True / False ===== -->
+<section id="ex4" class="section">
+  <div class="ex-section">
+    <div class="ex-title">
+      <span class="ex-num bg-orange">4</span>
+      Σωστό ή Λάθος; Αποφάσισε για κάθε πρόταση.
+    </div>
+
+    <div id="ex4-items"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkEx4()">✔ Έλεγχος</button>
+      <button class="btn btn-reset" onclick="resetEx4()">↺ Επαναφορά</button>
+    </div>
+    <div id="score4" class="score-box" style="display:none;">
+      <span class="score-num" id="score4-num">0/6</span>
+      <div>
+        <div class="score-label">Σωστές απαντήσεις</div>
+        <div id="score4-msg" style="font-size:0.85rem; font-weight:700; color:var(--gray);"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EXERCISE 5: Select structure ===== -->
+<section id="ex5" class="section">
+  <div class="ex-section">
+    <div class="ex-title">
+      <span class="ex-num bg-pink">5</span>
+      Επίλεξε τη σωστή δομή για κάθε πρόταση.
+    </div>
+
+    <div id="ex5-items"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkEx5()">✔ Έλεγχος</button>
+      <button class="btn btn-reset" onclick="resetEx5()">↺ Επαναφορά</button>
+    </div>
+    <div id="score5" class="score-box" style="display:none;">
+      <span class="score-num" id="score5-num">0/6</span>
+      <div>
+        <div class="score-label">Σωστές απαντήσεις</div>
+        <div id="score5-msg" style="font-size:0.85rem; font-weight:700; color:var(--gray);"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">© myspiderwebsite | Christina Papadimitriou</footer>
+
+<script>
+// ===== TABS =====
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===== EXERCISE 1: Matching =====
+let selectedSentence = null;
+let selectedSentenceAnswer = null;
+let ex1Answers = {}; // sentenceId -> typeId
+let ex1Correct = { ms1: 'mt3', ms2: 'mt1', ms3: 'mt2', ms4: 'mt2', ms5: 'mt3', ms6: 'mt4' };
+
+function selectSentence(id, correctType) {
+  document.querySelectorAll('.match-sentence').forEach(el => el.classList.remove('selected'));
+  selectedSentence = id;
+  selectedSentenceAnswer = correctType;
+  document.getElementById(id).classList.add('selected');
+}
+
+function selectType(typeId) {
+  if (!selectedSentence) { alert('Πρώτα επέλεξε μια πρόταση!'); return; }
+  ex1Answers[selectedSentence] = typeId;
+  // Visual feedback: color sentence
+  let colors = { mt1: 'matched-1', mt2: 'matched-2', mt3: 'matched-3', mt4: 'matched-4' };
+  let el = document.getElementById(selectedSentence);
+  el.classList.remove('selected');
+  el.style.background = { mt1: '#d1fae5', mt2: '#dbeafe', mt3: '#ede9fe', mt4: '#ffedd5' }[typeId];
+  el.style.borderColor = { mt1: '#6ee7b7', mt2: '#93c5fd', mt3: '#c4b5fd', mt4: '#fed7aa' }[typeId];
+  selectedSentence = null;
+}
+
+function checkEx1() {
+  let correct = 0;
+  for (let [sent, type] of Object.entries(ex1Answers)) {
+    if (ex1Correct[sent] === type) correct++;
+  }
+  document.getElementById('score1').style.display = 'flex';
+  document.getElementById('score1-num').textContent = correct + '/6';
+  document.getElementById('score1-msg').textContent =
+    correct === 6 ? '🎉 Τέλειο!' : correct >= 4 ? '👍 Πολύ καλά!' : 'Δοκίμασε ξανά!';
+}
+
+function resetEx1() {
+  ex1Answers = {}; selectedSentence = null;
+  document.querySelectorAll('.match-sentence').forEach(el => {
+    el.classList.remove('selected');
+    el.style.background = ''; el.style.borderColor = '';
+  });
+  document.getElementById('score1').style.display = 'none';
+}
+
+// ===== EXERCISE 2: Μεταβατικό / Αμετάβατο =====
+const ex2Data = [
+  { sent: 'Ο Θανάσης οδηγούσε ένα παλιό φορτηγό.', ans: 'μεταβατικό' },
+  { sent: 'Ο σκύλος γάβγιζε δυνατά.', ans: 'αμετάβατο' },
+  { sent: 'Η γιαγιά μοιάζει κουρασμένη.', ans: 'συνδετικό' },
+  { sent: 'Τα φύλλα έπεσαν απαλά.', ans: 'αμετάβατο' },
+  { sent: 'Η Ελένη διάβασε ένα χοντρό βιβλίο.', ans: 'μεταβατικό' },
+  { sent: 'Ο νέος προπονητής φαίνεται αυστηρός.', ans: 'συνδετικό' },
+];
+
+const ex2Options = ['μεταβατικό', 'αμετάβατο', 'συνδετικό'];
+
+function buildEx2() {
+  const container = document.getElementById('ex2-items');
+  container.innerHTML = '';
+  ex2Data.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'sentence-item';
+    div.innerHTML = `<div class="sent-text">${item.sent}</div>
+      <div class="radio-group" id="ex2-g${i}">
+        ${ex2Options.map(opt => `<div class="radio-opt" onclick="pickRadio('ex2-g${i}', this)">${opt}</div>`).join('')}
+      </div>
+      <div class="feedback" id="ex2-fb${i}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function pickRadio(groupId, el) {
+  document.querySelectorAll(`#${groupId} .radio-opt`).forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function checkEx2() {
+  let correct = 0;
+  ex2Data.forEach((item, i) => {
+    const group = document.getElementById(`ex2-g${i}`);
+    const opts = group.querySelectorAll('.radio-opt');
+    const fb = document.getElementById(`ex2-fb${i}`);
+    let chosen = null;
+    opts.forEach(o => { if (o.classList.contains('selected')) chosen = o; });
+    if (!chosen) return;
+    opts.forEach(o => {
+      o.classList.remove('correct', 'wrong');
+      if (o.textContent === item.ans) o.classList.add('correct');
+      else if (o.classList.contains('selected')) o.classList.add('wrong');
+    });
+    if (chosen.textContent === item.ans) { correct++; fb.textContent = '✓ Σωστό!'; fb.className = 'feedback show ok'; }
+    else { fb.textContent = `✗ Σωστό: ${item.ans}`; fb.className = 'feedback show err'; }
+  });
+  document.getElementById('score2').style.display = 'flex';
+  document.getElementById('score2-num').textContent = correct + '/6';
+  document.getElementById('score2-msg').textContent =
+    correct === 6 ? '🎉 Τέλειο!' : correct >= 4 ? '👍 Πολύ καλά!' : 'Δοκίμασε ξανά!';
+}
+
+function resetEx2() {
+  buildEx2();
+  document.getElementById('score2').style.display = 'none';
+}
+
+// ===== EXERCISE 3: Word roles =====
+const ex3Data = [
+  { sent: 'Ο <strong>παππούς</strong> έφτιαξε στον Γιώργη έναν χαρταετό.', word: 'παππούς', ans: 'Υποκείμενο' },
+  { sent: 'Ο παππούς <strong>έφτιαξε</strong> στον Γιώργη έναν χαρταετό.', word: 'έφτιαξε', ans: 'Ρήμα (δίπτωτο)' },
+  { sent: 'Ο παππούς έφτιαξε στον Γιώργη <strong>έναν χαρταετό</strong>.', word: 'έναν χαρταετό', ans: 'Αντικείμενο (άμεσο)' },
+  { sent: 'Ο νέος προπονητής φαίνεται <strong>αυστηρός</strong>.', word: 'αυστηρός', ans: 'Κατηγορούμενο' },
+  { sent: '<strong>Η Ελένη</strong> διάβασε ένα χοντρό βιβλίο.', word: 'Η Ελένη', ans: 'Υποκείμενο' },
+  { sent: 'Η Ελένη διάβασε <strong>ένα χοντρό βιβλίο</strong>.', word: 'ένα χοντρό βιβλίο', ans: 'Αντικείμενο (άμεσο)' },
+  { sent: 'Η γιαγιά <strong>μοιάζει</strong> κουρασμένη.', word: 'μοιάζει', ans: 'Ρήμα (συνδετικό)' },
+];
+const ex3Roles = ['Υποκείμενο','Ρήμα (δίπτωτο)','Ρήμα (συνδετικό)','Αντικείμενο (άμεσο)','Αντικείμενο (έμμεσο)','Κατηγορούμενο'];
+
+function buildEx3() {
+  const container = document.getElementById('ex3-items');
+  container.innerHTML = '';
+  ex3Data.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'word-role-item';
+    div.innerHTML = `<div class="word-role-sent">${item.sent}</div>
+      <div class="roles-grid" id="ex3-g${i}">
+        ${ex3Roles.map(r => `<div class="role-chip" onclick="pickChip('ex3-g${i}', this)">${r}</div>`).join('')}
+      </div>
+      <div class="feedback" id="ex3-fb${i}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function pickChip(groupId, el) {
+  document.querySelectorAll(`#${groupId} .role-chip`).forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function checkEx3() {
+  let correct = 0;
+  ex3Data.forEach((item, i) => {
+    const group = document.getElementById(`ex3-g${i}`);
+    const chips = group.querySelectorAll('.role-chip');
+    const fb = document.getElementById(`ex3-fb${i}`);
+    let chosen = null;
+    chips.forEach(c => { if (c.classList.contains('selected')) chosen = c; });
+    if (!chosen) return;
+    chips.forEach(c => {
+      c.classList.remove('correct', 'wrong');
+      if (c.textContent === item.ans) c.classList.add('correct');
+      else if (c.classList.contains('selected')) c.classList.add('wrong');
+    });
+    if (chosen.textContent === item.ans) { correct++; fb.textContent = '✓ Σωστό!'; fb.className = 'feedback show ok'; }
+    else { fb.textContent = `✗ Σωστό: ${item.ans}`; fb.className = 'feedback show err'; }
+  });
+  document.getElementById('score3').style.display = 'flex';
+  document.getElementById('score3-num').textContent = correct + '/7';
+  document.getElementById('score3-msg').textContent =
+    correct === 7 ? '🎉 Τέλειο!' : correct >= 5 ? '👍 Πολύ καλά!' : 'Δοκίμασε ξανά!';
+}
+
+function resetEx3() { buildEx3(); document.getElementById('score3').style.display = 'none'; }
+
+// ===== EXERCISE 4: True/False =====
+const ex4Data = [
+  { stmt: 'Το ρήμα «τρέχω» είναι αμετάβατο.', ans: true },
+  { stmt: 'Το ρήμα «φαίνομαι» είναι μεταβατικό.', ans: false },
+  { stmt: 'Το κατηγορούμενο δίνει ιδιότητα στο υποκείμενο.', ans: true },
+  { stmt: 'Το άμεσο αντικείμενο απαντά στην ερώτηση «σε ποιον;».', ans: false },
+  { stmt: 'Ένα δίπτωτο ρήμα παίρνει δύο αντικείμενα.', ans: true },
+  { stmt: 'Στην πρόταση «Ο σκύλος γάβγιζε», το ρήμα είναι μεταβατικό.', ans: false },
+];
+
+function buildEx4() {
+  const container = document.getElementById('ex4-items');
+  container.innerHTML = '';
+  ex4Data.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'tf-item';
+    div.innerHTML = `<div class="tf-sent">${i+1}. ${item.stmt}</div>
+      <div class="tf-btns">
+        <button class="tf-btn" id="ex4-t${i}" onclick="pickTF(${i}, true)">✓ Σωστό</button>
+        <button class="tf-btn" id="ex4-f${i}" onclick="pickTF(${i}, false)">✗ Λάθος</button>
+      </div>
+      <div class="feedback" id="ex4-fb${i}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+const ex4Picks = {};
+function pickTF(i, val) {
+  ex4Picks[i] = val;
+  document.getElementById(`ex4-t${i}`).className = 'tf-btn' + (val ? ' selected-t' : '');
+  document.getElementById(`ex4-f${i}`).className = 'tf-btn' + (!val ? ' selected-f' : '');
+}
+
+function checkEx4() {
+  let correct = 0;
+  ex4Data.forEach((item, i) => {
+    if (ex4Picks[i] === undefined) return;
+    const fb = document.getElementById(`ex4-fb${i}`);
+    const tBtn = document.getElementById(`ex4-t${i}`);
+    const fBtn = document.getElementById(`ex4-f${i}`);
+    tBtn.className = 'tf-btn' + (item.ans ? ' correct' : (ex4Picks[i] === true ? ' wrong' : ''));
+    fBtn.className = 'tf-btn' + (!item.ans ? ' correct' : (ex4Picks[i] === false ? ' wrong' : ''));
+    if (ex4Picks[i] === item.ans) { correct++; fb.textContent = '✓ Σωστό!'; fb.className = 'feedback show ok'; }
+    else { fb.textContent = `✗ Λάθος! Σωστό: ${item.ans ? 'Σωστό' : 'Λάθος'}`; fb.className = 'feedback show err'; }
+  });
+  document.getElementById('score4').style.display = 'flex';
+  document.getElementById('score4-num').textContent = correct + '/6';
+  document.getElementById('score4-msg').textContent =
+    correct === 6 ? '🎉 Τέλειο!' : correct >= 4 ? '👍 Πολύ καλά!' : 'Δοκίμασε ξανά!';
+}
+
+function resetEx4() { Object.keys(ex4Picks).forEach(k => delete ex4Picks[k]); buildEx4(); document.getElementById('score4').style.display = 'none'; }
+
+// ===== EXERCISE 5: Choose structure =====
+const ex5Data = [
+  { sent: 'Το πουλί τραγούδησε.', opts: ['Υ – Ρ', 'Υ – Ρ – Αντικείμενο', 'Υ – Ρ – Κατηγορούμενο', 'Υ – Ρ – Αντ.Άμεσο – Αντ.Έμμεσο'], ans: 'Υ – Ρ' },
+  { sent: 'Ο Κώστας έπιασε μια τεράστια πέστροφα.', opts: ['Υ – Ρ', 'Υ – Ρ – Αντικείμενο', 'Υ – Ρ – Κατηγορούμενο', 'Υ – Ρ – Αντ.Άμεσο – Αντ.Έμμεσο'], ans: 'Υ – Ρ – Αντικείμενο' },
+  { sent: 'Η γιαγιά μοιάζει κουρασμένη.', opts: ['Υ – Ρ', 'Υ – Ρ – Αντικείμενο', 'Υ – Ρ – Κατηγορούμενο', 'Υ – Ρ – Αντ.Άμεσο – Αντ.Έμμεσο'], ans: 'Υ – Ρ – Κατηγορούμενο' },
+  { sent: 'Ο παππούς έφτιαξε στον Γιώργη έναν χαρταετό.', opts: ['Υ – Ρ', 'Υ – Ρ – Αντικείμενο', 'Υ – Ρ – Κατηγορούμενο', 'Υ – Ρ – Αντ.Άμεσο – Αντ.Έμμεσο'], ans: 'Υ – Ρ – Αντ.Άμεσο – Αντ.Έμμεσο' },
+  { sent: 'Τα φύλλα έπεσαν απαλά.', opts: ['Υ – Ρ', 'Υ – Ρ – Αντικείμενο', 'Υ – Ρ – Κατηγορούμενο', 'Υ – Ρ – Αντ.Άμεσο – Αντ.Έμμεσο'], ans: 'Υ – Ρ' },
+  { sent: 'Η Ελένη έδωσε στη φίλη της το μολύβι.', opts: ['Υ – Ρ', 'Υ – Ρ – Αντικείμενο', 'Υ – Ρ – Κατηγορούμενο', 'Υ – Ρ – Αντ.Άμεσο – Αντ.Έμμεσο'], ans: 'Υ – Ρ – Αντ.Άμεσο – Αντ.Έμμεσο' },
+];
+
+function buildEx5() {
+  const container = document.getElementById('ex5-items');
+  container.innerHTML = '';
+  ex5Data.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'sentence-item';
+    div.innerHTML = `<div class="sent-text">${i+1}. ${item.sent}</div>
+      <div class="radio-group" id="ex5-g${i}">
+        ${item.opts.map(opt => `<div class="radio-opt" onclick="pickRadio('ex5-g${i}', this)">${opt}</div>`).join('')}
+      </div>
+      <div class="feedback" id="ex5-fb${i}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function checkEx5() {
+  let correct = 0;
+  ex5Data.forEach((item, i) => {
+    const group = document.getElementById(`ex5-g${i}`);
+    const opts = group.querySelectorAll('.radio-opt');
+    const fb = document.getElementById(`ex5-fb${i}`);
+    let chosen = null;
+    opts.forEach(o => { if (o.classList.contains('selected')) chosen = o; });
+    if (!chosen) return;
+    opts.forEach(o => {
+      o.classList.remove('correct', 'wrong');
+      if (o.textContent === item.ans) o.classList.add('correct');
+      else if (o.classList.contains('selected')) o.classList.add('wrong');
+    });
+    if (chosen.textContent === item.ans) { correct++; fb.textContent = '✓ Σωστό!'; fb.className = 'feedback show ok'; }
+    else { fb.textContent = `✗ Σωστό: ${item.ans}`; fb.className = 'feedback show err'; }
+  });
+  document.getElementById('score5').style.display = 'flex';
+  document.getElementById('score5-num').textContent = correct + '/6';
+  document.getElementById('score5-msg').textContent =
+    correct === 6 ? '🎉 Τέλειο!' : correct >= 4 ? '👍 Πολύ καλά!' : 'Δοκίμασε ξανά!';
+}
+
+function resetEx5() { buildEx5(); document.getElementById('score5').style.display = 'none'; }
+
+// INIT
+buildEx2(); buildEx3(); buildEx4(); buildEx5();
+</script>
+</body>
+</html>
