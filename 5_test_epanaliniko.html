@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Επαναληπτικό Τεστ — Γλώσσα Στ΄ Ενότητα 10</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap');
+
+  :root {
+    --blue: #1565C0; --blue-light: #E3F2FD; --blue-mid: #90CAF9;
+    --green: #2E7D32; --green-light: #E8F5E9;
+    --orange: #E65100; --orange-light: #FFF3E0;
+    --purple: #6A1B9A; --purple-light: #F3E5F5;
+    --teal: #00695C; --teal-light: #E0F2F1;
+    --red: #C62828; --red-light: #FFEBEE;
+    --gray: #F5F5F5; --border: #E0E0E0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #E3F2FD 0%, #F3E5F5 100%);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .wrapper { max-width: 860px; margin: 0 auto; }
+
+  header {
+    background: linear-gradient(135deg, #1565C0, #283593);
+    color: white; border-radius: 16px; padding: 24px 28px 18px;
+    margin-bottom: 24px; box-shadow: 0 4px 20px rgba(21,101,192,0.35);
+  }
+  header h1 { font-family: 'Fredoka One', cursive; font-size: 1.7rem; letter-spacing: .5px; }
+  header p { font-size: 0.9rem; opacity: 0.85; margin-top: 4px; }
+
+  .meta-bar {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;
+  }
+  .meta-bar input {
+    flex: 1; min-width: 180px; padding: 10px 14px; border-radius: 10px;
+    border: 2px solid var(--border); font-family: 'Nunito', sans-serif; font-size: 0.95rem;
+    background: white;
+  }
+  .meta-bar input:focus { outline: none; border-color: var(--blue-mid); }
+
+  .section {
+    background: white; border-radius: 14px; padding: 22px 24px;
+    margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+
+  .section-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  }
+  .section-num {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1rem; color: white; flex-shrink: 0;
+  }
+  .section-title { font-weight: 800; font-size: 1.1rem; }
+
+  .instr { font-style: italic; font-size: 0.88rem; color: #555; margin-bottom: 14px; background: var(--gray); padding: 8px 12px; border-radius: 8px; }
+
+  /* Color schemes per section */
+  .s1 .section-num { background: var(--blue); }
+  .s1 .section-title { color: var(--blue); }
+  .s2 .section-num { background: var(--purple); }
+  .s2 .section-title { color: var(--purple); }
+  .s3 .section-num { background: var(--orange); }
+  .s3 .section-title { color: var(--orange); }
+  .s4 .section-num { background: var(--teal); }
+  .s4 .section-title { color: var(--teal); }
+  .s5 .section-num { background: #4E342E; }
+  .s5 .section-title { color: #4E342E; }
+  .s6 .section-num { background: #37474F; }
+  .s6 .section-title { color: #37474F; }
+  .s7 .section-num { background: var(--blue); }
+  .s7 .section-title { color: var(--blue); }
+
+  .item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .item-num { font-weight: 700; min-width: 22px; padding-top: 2px; }
+  .item-text { flex: 1; line-height: 1.5; }
+
+  select, .answer-input {
+    font-family: 'Nunito', sans-serif; font-size: 0.9rem;
+    border: 2px solid var(--border); border-radius: 8px;
+    padding: 4px 8px; background: white; cursor: pointer;
+  }
+  select:focus, .answer-input:focus { outline: none; border-color: var(--blue-mid); }
+  .answer-input { width: 120px; }
+  .answer-input.wide { width: 200px; }
+
+  .correct { border-color: var(--green) !important; background: var(--green-light) !important; }
+  .wrong { border-color: var(--red) !important; background: var(--red-light) !important; }
+
+  .table-grid {
+    display: grid; gap: 1px; background: var(--border);
+    border-radius: 10px; overflow: hidden; margin-bottom: 8px;
+  }
+  .tg-2 { grid-template-columns: 1fr 120px; }
+  .tg-3 { grid-template-columns: 1fr 100px 100px; }
+  .tg-header { background: #EEF2FF; font-weight: 700; font-size: 0.85rem; padding: 8px 12px; }
+  .tg-cell { background: white; padding: 8px 12px; display: flex; align-items: center; font-size: 0.9rem; }
+
+  .text-box {
+    background: #FFF9F0; border-left: 4px solid; padding: 14px 16px;
+    border-radius: 0 10px 10px 0; margin-bottom: 14px; line-height: 1.75;
+    font-size: 0.95rem;
+  }
+
+  .radio-group { display: flex; gap: 10px; flex-wrap: wrap; }
+  .radio-opt { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+  .radio-opt input[type=radio] { cursor: pointer; }
+
+  .check-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--blue); color: white; border: none;
+    padding: 11px 24px; border-radius: 10px; font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; margin-top: 6px;
+  }
+  .check-btn:hover { background: #0D47A1; transform: translateY(-1px); }
+  .check-btn.green { background: var(--green); }
+  .check-btn.green:hover { background: #1B5E20; }
+
+  .feedback {
+    display: none; margin-top: 10px; padding: 10px 14px;
+    border-radius: 10px; font-weight: 700; font-size: 0.9rem;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-light); color: var(--green); border: 1.5px solid #A5D6A7; }
+  .feedback.err { background: var(--red-light); color: var(--red); border: 1.5px solid #EF9A9A; }
+
+  .score-panel {
+    background: linear-gradient(135deg, #283593, #1565C0);
+    color: white; border-radius: 14px; padding: 22px 24px; margin-top: 24px;
+    text-align: center; display: none;
+  }
+  .score-panel h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 6px; }
+  .score-num { font-size: 3.5rem; font-weight: 800; }
+  .score-label { font-size: 0.95rem; opacity: 0.85; }
+
+  .submit-row { text-align: center; margin-top: 28px; }
+
+  footer {
+    text-align: center; font-size: 0.78rem; color: #888;
+    margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--border);
+  }
+
+  .tag {
+    display: inline-block; background: #E8EAF6; color: #283593;
+    border-radius: 6px; padding: 2px 8px; font-size: 0.8rem; font-weight: 700; margin-left: 6px;
+  }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .check-btn, .submit-row, .feedback, .score-panel { display: none !important; }
+    .section { box-shadow: none; border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<header>
+  <h1>📝 Επαναληπτικό Τεστ — Γλώσσα Στ΄</h1>
+  <p>Ενότητα 10η &nbsp;|&nbsp; Γραμματική & Συντακτικό</p>
+</header>
+
+<div class="meta-bar">
+  <input type="text" id="studentName" placeholder="Όνομα μαθητή/τριας">
+  <input type="date" id="testDate">
+</div>
+
+<!-- Α. ΜΕΤΑΒΑΤΙΚΑ / ΑΜΕΤΑΒΑΤΑ -->
+<div class="section s1">
+  <div class="section-header">
+    <div class="section-num">Α</div>
+    <div class="section-title">Μεταβατικά & Αμετάβατα ρήματα</div>
+  </div>
+  <div class="instr">Να γράψεις <strong>Μ</strong> (μεταβατικό) ή <strong>Α</strong> (αμετάβατο) για το ρήμα κάθε πρότασης.</div>
+  <div class="table-grid tg-2">
+    <div class="tg-header">Πρόταση</div><div class="tg-header">Μ ή Α</div>
+    <div class="tg-cell">1. Η αδερφή μου παίζει βιολί κάθε απόγευμα.</div><div class="tg-cell"><input class="answer-input" data-ans="Μ" placeholder="..."></div>
+    <div class="tg-cell">2. Ο γείτονας έφτιαξε μια ξύλινη σκάλα στον κήπο.</div><div class="tg-cell"><input class="answer-input" data-ans="Μ" placeholder="..."></div>
+    <div class="tg-cell">3. Η βροχή σταμάτησε το πρωί.</div><div class="tg-cell"><input class="answer-input" data-ans="Α" placeholder="..."></div>
+    <div class="tg-cell">4. Αγόρασα ένα βιβλίο για τα γενέθλιά μου.</div><div class="tg-cell"><input class="answer-input" data-ans="Μ" placeholder="..."></div>
+    <div class="tg-cell">5. Ο σκύλος κοιμάται στη βεράντα.</div><div class="tg-cell"><input class="answer-input" data-ans="Α" placeholder="..."></div>
+    <div class="tg-cell">6. Έγραψε μια επιστολή στην κυβέρνηση.</div><div class="tg-cell"><input class="answer-input" data-ans="Μ" placeholder="..."></div>
+  </div>
+  <button class="check-btn" onclick="checkSection('s1')">✔ Έλεγχος</button>
+  <div class="feedback" id="fb-s1"></div>
+</div>
+
+<!-- Β. ΜΟΝΟΠΤΩΤΑ / ΔΙΠΤΩΤΑ -->
+<div class="section s2">
+  <div class="section-header">
+    <div class="section-num">Β</div>
+    <div class="section-title">Μονόπτωτα & Δίπτωτα ρήματα</div>
+  </div>
+  <div class="instr">Να χαρακτηρίσεις τα ρήματα ως <strong>μονόπτωτα (Μ)</strong> ή <strong>δίπτωτα (Δ)</strong>.</div>
+  <div class="table-grid tg-2">
+    <div class="tg-header">Πρόταση</div><div class="tg-header">Μ ή Δ</div>
+    <div class="tg-cell">1. Η δασκάλα μας έδωσε μια δύσκολη άσκηση.</div><div class="tg-cell"><input class="answer-input" data-ans="Δ" placeholder="..."></div>
+    <div class="tg-cell">2. Ο παππούς αγόρασε στην εγγονή του ένα ποδήλατο.</div><div class="tg-cell"><input class="answer-input" data-ans="Δ" placeholder="..."></div>
+    <div class="tg-cell">3. Η Ζωή διάβασε το βιβλίο.</div><div class="tg-cell"><input class="answer-input" data-ans="Μ" placeholder="..."></div>
+    <div class="tg-cell">4. Ο φίλος δάνεισε στον αδερφό μου τα σημειώματά του.</div><div class="tg-cell"><input class="answer-input" data-ans="Δ" placeholder="..."></div>
+    <div class="tg-cell">5. Είπε μια ωραία ιστορία στα παιδιά.</div><div class="tg-cell"><input class="answer-input" data-ans="Δ" placeholder="..."></div>
+  </div>
+  <button class="check-btn" onclick="checkSection('s2')">✔ Έλεγχος</button>
+  <div class="feedback" id="fb-s2"></div>
+</div>
+
+<!-- Γ. ΣΥΝΤΑΚΤΙΚΟΣ ΡΟΛΟΣ -->
+<div class="section s3">
+  <div class="section-header">
+    <div class="section-num">Γ</div>
+    <div class="section-title">Συντακτικός ρόλος λέξεων</div>
+  </div>
+  <div class="instr">Να γράψεις αν η έντονη λέξη είναι <strong>Υ</strong> (υποκείμενο), <strong>Α</strong> (αντικείμενο) ή <strong>Κ</strong> (κατηγορούμενο).</div>
+  <div class="table-grid tg-2">
+    <div class="tg-header">Πρόταση</div><div class="tg-header">Υ / Α / Κ</div>
+    <div class="tg-cell">1. <strong>Ο Λευτέρης</strong> έχασε το πορτοφόλι του.</div><div class="tg-cell"><input class="answer-input" data-ans="Υ" placeholder="..."></div>
+    <div class="tg-cell">2. Τα παιδιά φαίνονται <strong>κουρασμένα</strong> σήμερα.</div><div class="tg-cell"><input class="answer-input" data-ans="Κ" placeholder="..."></div>
+    <div class="tg-cell">3. Η μαμά μαγείρεψε <strong>ρύζι</strong> με λαχανικά.</div><div class="tg-cell"><input class="answer-input" data-ans="Α" placeholder="..."></div>
+    <div class="tg-cell">4. Ο Βαγγέλης έγινε <strong>πρωταθλητής</strong> στην κολύμβηση.</div><div class="tg-cell"><input class="answer-input" data-ans="Κ" placeholder="..."></div>
+    <div class="tg-cell">5. Ο ταχυδρόμος έφερε ένα <strong>δέμα</strong> από τη Θεσσαλονίκη.</div><div class="tg-cell"><input class="answer-input" data-ans="Α" placeholder="..."></div>
+  </div>
+  <button class="check-btn" onclick="checkSection('s3')">✔ Έλεγχος</button>
+  <div class="feedback" id="fb-s3"></div>
+</div>
+
+<!-- Δ. ΑΝΤΩΝΥΜΙΕΣ -->
+<div class="section s4">
+  <div class="section-header">
+    <div class="section-num">Δ</div>
+    <div class="section-title">Είδη αντωνυμιών</div>
+  </div>
+  <div class="instr">Να επιλέξεις το σωστό είδος αντωνυμίας για κάθε υπογραμμισμένη λέξη.</div>
+  <div class="table-grid tg-2">
+    <div class="tg-header">Πρόταση</div><div class="tg-header">Είδος</div>
+    <div class="tg-cell">1. <u>Αυτός</u> ο άνθρωπος είναι ο παππούς μου.</div>
+    <div class="tg-cell"><select data-ans="δεικτική">
+      <option value="">--</option>
+      <option>προσωπική</option><option>κτητική</option><option>δεικτική</option>
+      <option>αόριστη</option><option>αναφορική</option><option>ερωτηματική</option><option>αυτοπαθής</option>
+    </select></div>
+    <div class="tg-cell">2. Μήπως ξέρεις <u>τι</u> ώρα φεύγει το τρένο;</div>
+    <div class="tg-cell"><select data-ans="ερωτηματική">
+      <option value="">--</option>
+      <option>προσωπική</option><option>κτητική</option><option>δεικτική</option>
+      <option>αόριστη</option><option>αναφορική</option><option>ερωτηματική</option><option>αυτοπαθής</option>
+    </select></div>
+    <div class="tg-cell">3. <u>Κάθε</u> παιδί έχει τις δικές του ικανότητες.</div>
+    <div class="tg-cell"><select data-ans="αόριστη">
+      <option value="">--</option>
+      <option>προσωπική</option><option>κτητική</option><option>δεικτική</option>
+      <option>αόριστη</option><option>αναφορική</option><option>ερωτηματική</option><option>αυτοπαθής</option>
+    </select></div>
+    <div class="tg-cell">4. Η γυναίκα <u>που</u> μίλησε χθες είναι συγγραφέας.</div>
+    <div class="tg-cell"><select data-ans="αναφορική">
+      <option value="">--</option>
+      <option>προσωπική</option><option>κτητική</option><option>δεικτική</option>
+      <option>αόριστη</option><option>αναφορική</option><option>ερωτηματική</option><option>αυτοπαθής</option>
+    </select></div>
+    <div class="tg-cell">5. Φρόντισε τον <u>εαυτό</u> σου πριν από τους άλλους.</div>
+    <div class="tg-cell"><select data-ans="αυτοπαθής">
+      <option value="">--</option>
+      <option>προσωπική</option><option>κτητική</option><option>δεικτική</option>
+      <option>αόριστη</option><option>αναφορική</option><option>ερωτηματική</option><option>αυτοπαθής</option>
+    </select></div>
+    <div class="tg-cell">6. <u>Κανείς</u> δεν ήξερε πού βρίσκεται το κλειδί.</div>
+    <div class="tg-cell"><select data-ans="αόριστη">
+      <option value="">--</option>
+      <option>προσωπική</option><option>κτητική</option><option>δεικτική</option>
+      <option>αόριστη</option><option>αναφορική</option><option>ερωτηματική</option><option>αυτοπαθής</option>
+    </select></div>
+  </div>
+  <button class="check-btn" onclick="checkSection('s4')">✔ Έλεγχος</button>
+  <div class="feedback" id="fb-s4"></div>
+</div>
+
+<!-- Ε. ΟΡΘΟΓΡΑΦΙΑ -->
+<div class="section s6">
+  <div class="section-header">
+    <div class="section-num">Ε</div>
+    <div class="section-title">Ορθογραφία — Ότι / Ό,τι / Ποιο / Πιο</div>
+  </div>
+  <div class="instr">Να επιλέξεις τη σωστή λέξη σε κάθε πρόταση.</div>
+  <div id="ortho-items">
+    <div class="item" data-idx="0">
+      <span class="item-num">1.</span>
+      <span class="item-text">Μου είπε
+        <select data-ans="ότι"><option value="">--</option><option>ότι</option><option>ό,τι</option></select>
+        θα έρθει νωρίς.
+      </span>
+    </div>
+    <div class="item" data-idx="1">
+      <span class="item-num">2.</span>
+      <span class="item-text">Πάρε μαζί σου
+        <select data-ans="ό,τι"><option value="">--</option><option>ότι</option><option>ό,τι</option></select>
+        χρειαστείς για το ταξίδι.
+      </span>
+    </div>
+    <div class="item" data-idx="2">
+      <span class="item-num">3.</span>
+      <span class="item-text">Ήταν
+        <select data-ans="πιο"><option value="">--</option><option>ποιο</option><option>πιο</option></select>
+        χαρούμενος από ποτέ.
+      </span>
+    </div>
+    <div class="item" data-idx="3">
+      <span class="item-num">4.</span>
+      <span class="item-text">
+        <select data-ans="Ποια"><option value="">--</option><option>Ποια</option><option>Πια</option></select>
+        τσάντα προτιμάς; Αυτή ή εκείνη;
+      </span>
+    </div>
+    <div class="item" data-idx="4">
+      <span class="item-num">5.</span>
+      <span class="item-text">Κάνε
+        <select data-ans="ό,τι"><option value="">--</option><option>ότι</option><option>ό,τι</option></select>
+        σε κάνει να νιώθεις καλά.
+      </span>
+    </div>
+    <div class="item" data-idx="5">
+      <span class="item-num">6.</span>
+      <span class="item-text">Δεν ξέρω
+        <select data-ans="ποιος"><option value="">--</option><option>ποιος</option><option>πιος</option></select>
+        το είπε πρώτος.
+      </span>
+    </div>
+  </div>
+  <button class="check-btn" onclick="checkSection('s6')">✔ Έλεγχος</button>
+  <div class="feedback" id="fb-s6"></div>
+</div>
+
+<!-- ΣΤ. ΑΟΡΙΣΤΟΣ ΑΡΧΑΙΑΣ ΚΛΙΣΗΣ -->
+<div class="section s7">
+  <div class="section-header">
+    <div class="section-num">ΣΤ</div>
+    <div class="section-title">Αόριστος ρημάτων με αρχαία κλίση</div>
+  </div>
+  <div class="instr">Να γράψεις τον Αόριστο του ρήματος που δίνεται σε παρένθεση.</div>
+  <div class="table-grid tg-2">
+    <div class="tg-header">Πρόταση</div><div class="tg-header">Αόριστος</div>
+    <div class="tg-cell">1. Κάτι περίεργο _______ (συμβαίνει) στη γειτονιά.</div><div class="tg-cell"><input class="answer-input wide" data-ans="συνέβη" placeholder="..."></div>
+    <div class="tg-cell">2. Ο οδηγός _______ (παραβαίνω) τον Κώδικα Οδικής Κυκλοφορίας.</div><div class="tg-cell"><input class="answer-input wide" data-ans="παρέβη" placeholder="..."></div>
+    <div class="tg-cell">3. Η αστυνομία _______ (συλλαμβάνω) τον ύποπτο.</div><div class="tg-cell"><input class="answer-input wide" data-ans="συνέλαβε" placeholder="..."></div>
+    <div class="tg-cell">4. Ο διαμεσολαβητής _______ (παρεμβαίνω) για να λύσει τη διαφορά.</div><div class="tg-cell"><input class="answer-input wide" data-ans="παρενέβη" placeholder="..."></div>
+    <div class="tg-cell">5. Ο υπουργός _______ (προβαίνω) σε ανακοινώσεις.</div><div class="tg-cell"><input class="answer-input wide" data-ans="προέβη" placeholder="..."></div>
+  </div>
+  <button class="check-btn" onclick="checkSection('s7')">✔ Έλεγχος</button>
+  <div class="feedback" id="fb-s7"></div>
+</div>
+
+<div class="submit-row">
+  <button class="check-btn green" style="font-size:1.05rem;padding:14px 36px;" onclick="finalScore()">🎯 Τελικό Αποτέλεσμα</button>
+</div>
+
+<div class="score-panel" id="scorePanel">
+  <h2>Αποτέλεσμα</h2>
+  <div class="score-num" id="scoreNum">-</div>
+  <div class="score-label" id="scoreLbl">σωστές απαντήσεις</div>
+  <div id="scoreMsg" style="margin-top:10px;font-size:1rem;"></div>
+</div>
+
+<footer>© myspiderwebsite | Christina Papadimitriou</footer>
+</div>
+
+<script>
+const SECTIONS = {
+  s1: { selector: '.s1 input[data-ans]' },
+  s2: { selector: '.s2 input[data-ans]' },
+  s3: { selector: '.s3 input[data-ans]' },
+  s4: { selector: '.s4 select[data-ans]' },
+  s6: { selector: '.s6 select[data-ans]' },
+  s7: { selector: '.s7 input[data-ans]' },
+};
+
+function normalize(v) {
+  return v.trim().toLowerCase().replace(/,/g,'').replace(/\s+/g,' ');
+}
+
+function checkSection(sid) {
+  const sel = SECTIONS[sid].selector;
+  const inputs = document.querySelectorAll(sel);
+  let correct = 0, total = inputs.length;
+  inputs.forEach(el => {
+    const ans = normalize(el.dataset.ans);
+    const val = normalize(el.value || el.options?.[el.selectedIndex]?.value || '');
+    if (!val) { el.className = el.className.replace(/ correct| wrong/g,''); return; }
+    if (val === ans) {
+      el.classList.remove('wrong'); el.classList.add('correct'); correct++;
+    } else {
+      el.classList.remove('correct'); el.classList.add('wrong');
+    }
+  });
+  const fb = document.getElementById('fb-' + sid);
+  fb.classList.add('show');
+  if (correct === total) {
+    fb.className = 'feedback show ok';
+    fb.textContent = `✅ Μπράβο! Όλες οι απαντήσεις σωστές (${correct}/${total})!`;
+  } else {
+    fb.className = 'feedback show err';
+    fb.textContent = `❌ Σωστές: ${correct}/${total}. Οι κόκκινες απαντήσεις χρειάζονται διόρθωση.`;
+  }
+}
+
+function finalScore() {
+  let correct = 0, total = 0;
+  Object.values(SECTIONS).forEach(s => {
+    document.querySelectorAll(s.selector).forEach(el => {
+      const ans = normalize(el.dataset.ans);
+      const val = normalize(el.value || el.options?.[el.selectedIndex]?.value || '');
+      total++;
+      if (val === ans) correct++;
+    });
+  });
+  const panel = document.getElementById('scorePanel');
+  panel.style.display = 'block';
+  document.getElementById('scoreNum').textContent = `${correct} / ${total}`;
+  const pct = (correct/total*100).toFixed(0);
+  document.getElementById('scoreLbl').textContent = `σωστές απαντήσεις (${pct}%)`;
+  const msgs = [
+    [90, '🌟 Εξαιρετικό! Πολύ καλή δουλειά!'],
+    [70, '👍 Καλή προσπάθεια! Λίγο ακόμα εξάσκηση!'],
+    [50, '📚 Χρειάζεσαι επανάληψη σε κάποιες ενότητες.'],
+    [0,  '💪 Μη χάνεις το κουράγιο σου! Επανάλαβε και ξαναπροσπάθησε!']
+  ];
+  document.getElementById('scoreMsg').textContent = msgs.find(m => +pct >= m[0])[1];
+  panel.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
