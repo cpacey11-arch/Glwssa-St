@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Σύνδεση Προτάσεων</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap');
+
+  :root {
+    --bg: #fffbf0;
+    --primary: #2a7de1;
+    --secondary: #f7a015;
+    --green: #27ae60;
+    --red: #e74c3c;
+    --purple: #8e44ad;
+    --teal: #16a085;
+    --card: #ffffff;
+    --border: #e0d8c8;
+    --text: #2c3e50;
+    --light: #f0f4ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px 0;
+  }
+
+  header {
+    background: linear-gradient(135deg, #2a7de1 0%, #1a5fb4 100%);
+    color: white;
+    text-align: center;
+    padding: 28px 20px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: -20px;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  header p { font-size: 0.95rem; opacity: 0.88; }
+
+  /* TAB NAV */
+  .tab-nav {
+    display: flex;
+    overflow-x: auto;
+    background: #1a5fb4;
+    scrollbar-width: none;
+    gap: 2px;
+    padding: 0 10px;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 0 0 auto;
+    padding: 11px 16px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    color: #fff;
+    border-bottom-color: var(--secondary);
+    background: rgba(255,255,255,0.08);
+  }
+  .tab-btn:hover:not(.active) { color: #fff; }
+
+  /* SECTIONS */
+  .section { display: none; padding: 20px 16px; max-width: 860px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* THEORY BOX */
+  .theory {
+    background: var(--light);
+    border-left: 5px solid var(--primary);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 22px;
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+  .theory strong { color: var(--primary); }
+  .theory .syndesm { color: var(--purple); font-weight: 700; }
+  .theory .example {
+    background: white;
+    border-radius: 8px;
+    padding: 9px 14px;
+    margin: 10px 0 4px;
+    font-style: italic;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .theory ul { padding-left: 18px; margin-top: 6px; }
+  .theory li { margin-bottom: 3px; }
+  .theory .label {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    border-radius: 20px;
+    padding: 2px 11px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    margin-right: 5px;
+    letter-spacing: 0.3px;
+  }
+  .theory .label.green { background: var(--green); }
+  .theory .label.purple { background: var(--purple); }
+  .theory .label.teal { background: var(--teal); }
+
+  /* EXERCISE CARD */
+  .ex-card {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    padding: 20px 18px;
+    margin-bottom: 20px;
+    border: 1.5px solid var(--border);
+  }
+  .ex-card h3 {
+    font-size: 0.97rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ex-num {
+    background: var(--primary);
+    color: white;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  /* DRAG & DROP */
+  .drag-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: #f8f6f0;
+    border-radius: 10px;
+    padding: 12px;
+    min-height: 56px;
+    margin-bottom: 14px;
+  }
+  .draggable {
+    background: var(--secondary);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  }
+  .draggable:active { cursor: grabbing; transform: scale(1.07); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+  .draggable.purple-chip { background: var(--purple); }
+  .draggable.teal-chip { background: var(--teal); }
+  .draggable.green-chip { background: var(--green); }
+
+  .drop-zone {
+    border: 2px dashed #b0c4de;
+    border-radius: 10px;
+    min-height: 48px;
+    padding: 8px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    background: #f0f8ff;
+    transition: background 0.2s, border-color 0.2s;
+    margin-bottom: 6px;
+  }
+  .drop-zone.over { background: #e0f0ff; border-color: var(--primary); }
+  .drop-zone .draggable { cursor: pointer; font-size: 0.82rem; }
+  .drop-label {
+    font-size: 0.78rem;
+    color: #888;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  /* SENTENCE WITH BLANK */
+  .sentence-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .sentence-row .sent-text {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    flex: 1 1 auto;
+  }
+  .blank-drop {
+    display: inline-flex;
+    align-items: center;
+    min-width: 100px;
+    min-height: 30px;
+    border-bottom: 2.5px solid var(--primary);
+    padding: 2px 8px;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .blank-drop .draggable {
+    font-size: 0.78rem;
+    padding: 3px 10px;
+    cursor: pointer;
+  }
+
+  /* CLASSIFY TABLE */
+  .classify-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  @media(max-width: 600px) {
+    .classify-grid { grid-template-columns: 1fr; }
+  }
+  .class-col {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+  }
+  .class-header {
+    padding: 9px 12px;
+    font-weight: 800;
+    font-size: 0.82rem;
+    color: white;
+    text-align: center;
+  }
+  .class-header.blue { background: var(--primary); }
+  .class-header.green { background: var(--green); }
+  .class-header.purple { background: var(--purple); }
+  .class-body {
+    min-height: 80px;
+    padding: 8px;
+    background: white;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-content: flex-start;
+  }
+
+  /* RADIO / SELECT */
+  .options-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .opt-btn {
+    border: 2px solid var(--border);
+    background: white;
+    border-radius: 20px;
+    padding: 7px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s;
+    color: var(--text);
+  }
+  .opt-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .opt-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+  .opt-btn.correct { background: var(--green); color: white; border-color: var(--green); }
+  .opt-btn.wrong { background: var(--red); color: white; border-color: var(--red); }
+
+  /* TEXT PASSAGE */
+  .passage {
+    background: #fffaf0;
+    border: 1.5px solid #e8d8b0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    line-height: 1.8;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+  .passage strong { color: var(--purple); font-style: normal; }
+  .passage .underline { text-decoration: underline; text-decoration-color: var(--primary); }
+
+  /* BUTTONS */
+  .btn {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 22px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-check {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 3px 10px rgba(42,125,225,0.3);
+  }
+  .btn-check:hover { background: #1a5fb4; transform: translateY(-1px); }
+  .btn-reset {
+    background: #f0f0f0;
+    color: #666;
+    margin-left: 8px;
+  }
+  .btn-reset:hover { background: #e0e0e0; }
+
+  .btn-row { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* FEEDBACK */
+  .feedback {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+  .feedback.err { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+  .feedback.partial { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+
+  /* SCORE */
+  .score-bar {
+    background: white;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    padding: 14px 18px;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .score-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: var(--primary);
+    min-width: 60px;
+    text-align: center;
+  }
+  .score-track { flex: 1; background: #eee; border-radius: 20px; height: 12px; }
+  .score-fill { background: var(--green); border-radius: 20px; height: 100%; transition: width 0.6s; }
+
+  /* MATCH */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media(max-width:520px) { .match-grid { grid-template-columns: 1fr; } }
+  .match-item {
+    background: #f8f6f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .match-item select {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 6px;
+    background: white;
+  }
+  .match-item.correct-item { background: #d4edda; }
+  .match-item.wrong-item { background: #f8d7da; }
+
+  /* HIGHLIGHT EXERCISE */
+  .highlight-word {
+    display: inline-block;
+    padding: 2px 6px;
+    margin: 2px 1px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-style: normal;
+  }
+  .highlight-word:hover { background: #e8f0fe; }
+  .highlight-word.tagged-parataktiki { background: #d1ecf1; outline: 2px solid var(--primary); }
+  .highlight-word.tagged-ypotaktiki { background: #d4edda; outline: 2px solid var(--green); }
+  .highlight-word.tagged-asyndet { background: #fff3cd; outline: 2px solid var(--secondary); }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📝 Σύνδεση Προτάσεων</h1>
+  <p>Διαδραστικές ασκήσεις — Γλώσσα Στ΄ Δημοτικού</p>
+</header>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('theory')">📖 Θεωρία</button>
+  <button class="tab-btn" onclick="showTab('parataktiki')">🔵 Παρατακτική</button>
+  <button class="tab-btn" onclick="showTab('ypotaktiki')">🟢 Υποτακτική</button>
+  <button class="tab-btn" onclick="showTab('antithetikoiS')">🟣 Αντιθετικοί</button>
+  <button class="tab-btn" onclick="showTab('classify')">🎯 Ταξινόμηση</button>
+  <button class="tab-btn" onclick="showTab('passage')">📄 Κείμενο</button>
+</nav>
+
+<!-- ============ THEORY ============ -->
+<div class="section active" id="theory">
+  <div class="theory">
+    <p><span class="label">ΠΑΡΑΤΑΚΤΙΚΗ ΣΥΝΔΕΣΗ</span><br>
+    Δύο <strong>όμοιες</strong> (και οι δύο ανεξάρτητες) προτάσεις συνδέονται με <strong>παρατακτικούς συνδέσμους</strong>. Λέμε ότι «παρατάσσονται».<br>
+    <span class="syndesm">και, ή, είτε, ούτε, αλλά, όμως, μα</span><br>
+    <div class="example">Πήγα λοιπόν στον κήπο <strong>και</strong> περίμενα τον μπαμπά.</div>
+    </p>
+  </div>
+  <div class="theory">
+    <p><span class="label green">ΥΠΟΤΑΚΤΙΚΗ ΣΥΝΔΕΣΗ</span><br>
+    Μια <strong>ανεξάρτητη</strong> και μια <strong>εξαρτημένη</strong> πρόταση συνδέονται με <strong>υποτακτικούς συνδέσμους</strong>.<br>
+    <div class="example">Ο μπαμπάς μου μου υποσχέθηκε <span class="syndesm">ότι</span> θα το συζητούσαμε.</div>
+    </p>
+    <p style="margin-top:10px">Εξαρτημένες προτάσεις:</p>
+    <ul>
+      <li><strong>Αιτιολογικές:</strong> <span class="syndesm">γιατί, επειδή, αφού, διότι, μια και</span></li>
+      <li><strong>Τελικές:</strong> <span class="syndesm">να, για να</span></li>
+      <li><strong>Αποτελεσματικές/Συμπερασματικές:</strong> <span class="syndesm">ώστε, που</span></li>
+      <li><strong>Υποθετικές:</strong> <span class="syndesm">αν</span></li>
+      <li><strong>Εναντιωματικές/Παραχωρητικές:</strong> <span class="syndesm">αν και, ενώ, μολονότι, παρ' όλο που</span></li>
+      <li><strong>Χρονικές:</strong> <span class="syndesm">όταν, καθώς, μόλις, πριν, αφού, προτού, ώσπου, όποτε, άμα</span></li>
+      <li><strong>Αντικειμενικές:</strong> <span class="syndesm">να, ότι, πως</span></li>
+    </ul>
+  </div>
+  <div class="theory">
+    <p><span class="label teal">ΑΣΥΝΔΕΤΟ ΣΧΗΜΑ</span><br>
+    Όμοιες προτάσεις μπαίνουν η μια δίπλα στην άλλη <strong>χωρίς σύνδεσμο</strong>, μόνο με <strong>κόμματα</strong>.<br>
+    <div class="example">Η μαμά μου με κοίταξε, έκανε μια περίεργη γκριμάτσα, μ' αγκάλιασε, με φίλησε στο κεφάλι.</div>
+    </p>
+  </div>
+  <div class="theory" style="border-color: var(--purple); background:#f8f0ff;">
+    <p><span class="label purple">ΑΝΤΙΘΕΤΙΚΟΙ ΣΥΝΔΕΣΜΟΙ</span><br>
+    Συνδέουν δύο ανεξάρτητες προτάσεις <strong>αντίθετου νοήματος</strong>.<br>
+    <span class="syndesm">αλλά / μα / όμως / ωστόσο</span><br>
+    <div class="example">Τότε τα παιδιά ζουν με τον έναν από τους δύο γονείς, <strong>αλλά</strong> βλέπουν και τον άλλον.</div>
+    Υπάρχει και η έμφαση: <span class="syndesm">όχι μόνο… αλλά και</span><br>
+    <div class="example">Υπάρχουν διαφορετικές οικογένειες <strong>όχι μόνο</strong> από χώρα σε χώρα <strong>αλλά και</strong> μέσα στην ίδια πόλη.</div>
+    Εναντιωματικές/παραχωρητικές εξαρτημένες: <span class="syndesm">αν και, ενώ, μολονότι, παρ' όλο που, ακόμη κι αν</span>
+    </p>
+  </div>
+</div>
+
+<!-- ============ ΠΑΡΑΤΑΚΤΙΚΗ ============ -->
+<div class="section" id="parataktiki">
+
+  <!-- Exercise A1: Choose the connector -->
+  <div class="ex-card">
+    <h3><span class="ex-num">1</span> Επίλεξε τον κατάλληλο παρατακτικό σύνδεσμο</h3>
+    <div id="a1-items">
+      <div class="sentence-row" style="margin-bottom:16px;display:block;">
+        <p style="font-size:0.9rem;margin-bottom:6px;">α) Της μίλησε πολύ ωραία, <span id="a1-blank1" class="blank-drop" style="display:inline-flex;min-width:80px"></span> εκείνη έμεινε σκεφτική.</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'a1-1','αλλά','correct')">αλλά</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a1-1','και','wrong')">και</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a1-1','ή','wrong')">ή</button>
+        </div>
+        <div class="feedback" id="fb-a1-1"></div>
+      </div>
+      <div class="sentence-row" style="margin-bottom:16px;display:block;">
+        <p style="font-size:0.9rem;margin-bottom:6px;">β) Πήγαμε στην παραλία <span id="a1-blank2" class="blank-drop" style="display:inline-flex;min-width:80px"></span> κολυμπήσαμε όλη μέρα.</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'a1-2','αλλά','wrong')">αλλά</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a1-2','και','correct')">και</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a1-2','ούτε','wrong')">ούτε</button>
+        </div>
+        <div class="feedback" id="fb-a1-2"></div>
+      </div>
+      <div class="sentence-row" style="margin-bottom:16px;display:block;">
+        <p style="font-size:0.9rem;margin-bottom:6px;">γ) Θα διαβάσεις τώρα <span id="a1-blank3" class="blank-drop" style="display:inline-flex;min-width:80px"></span> δε θα δεις τηλεόραση.</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'a1-3','και','wrong')">και</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a1-3','ή','wrong')">ή</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a1-3','ούτε... ούτε','correct')">ούτε... ούτε</button>
+        </div>
+        <div class="feedback" id="fb-a1-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exercise A2: Parataktiki or Ypotaktiki -->
+  <div class="ex-card">
+    <h3><span class="ex-num">2</span> Παρατακτική ή Υποτακτική; Επίλεξε για κάθε πρόταση</h3>
+    <div id="a2-items">
+      <div id="a2-row-1" style="margin-bottom:14px;">
+        <p style="font-size:0.88rem;margin-bottom:6px;font-style:italic;">«Έτρεξε γρήγορα <strong>μα</strong> δεν πρόλαβε το λεωφορείο.»</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'a2-1','Παρατακτική','correct')">Παρατακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a2-1','Υποτακτική','wrong')">Υποτακτική</button>
+        </div>
+        <div class="feedback" id="fb-a2-1"></div>
+      </div>
+      <div id="a2-row-2" style="margin-bottom:14px;">
+        <p style="font-size:0.88rem;margin-bottom:6px;font-style:italic;">«Ήξερε <strong>ότι</strong> θα ήταν δύσκολο.»</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'a2-2','Παρατακτική','wrong')">Παρατακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a2-2','Υποτακτική','correct')">Υποτακτική</button>
+        </div>
+        <div class="feedback" id="fb-a2-2"></div>
+      </div>
+      <div id="a2-row-3" style="margin-bottom:14px;">
+        <p style="font-size:0.88rem;margin-bottom:6px;font-style:italic;">«Κοίταξε, χαμογέλασε, έφυγε.»</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'a2-3','Παρατακτική','wrong')">Παρατακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a2-3','Ασύνδετο σχήμα','correct')">Ασύνδετο σχήμα</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a2-3','Υποτακτική','wrong')">Υποτακτική</button>
+        </div>
+        <div class="feedback" id="fb-a2-3"></div>
+      </div>
+      <div id="a2-row-4" style="margin-bottom:14px;">
+        <p style="font-size:0.88rem;margin-bottom:6px;font-style:italic;">«Θέλω <strong>να</strong> πάω εκδρομή.»</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'a2-4','Παρατακτική','wrong')">Παρατακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'a2-4','Υποτακτική','correct')">Υποτακτική</button>
+        </div>
+        <div class="feedback" id="fb-a2-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ΥΠΟΤΑΚΤΙΚΗ ============ -->
+<div class="section" id="ypotaktiki">
+
+  <div class="ex-card">
+    <h3><span class="ex-num">1</span> Αναγνώρισε το είδος της εξαρτημένης πρότασης</h3>
+    <p style="font-size:0.82rem;color:#666;margin-bottom:14px;">Διάλεξε το σωστό είδος για κάθε υπογραμμισμένη εξαρτημένη πρόταση.</p>
+
+    <div id="b1-rows">
+      <div style="margin-bottom:16px;">
+        <p style="font-size:0.89rem;margin-bottom:6px;">α) Έφυγε νωρίς <span style="text-decoration:underline;font-weight:700;color:#8e44ad">επειδή είχε εξετάσεις</span>.</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'b1-1','Αιτιολογική','correct')">Αιτιολογική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-1','Τελική','wrong')">Τελική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-1','Χρονική','wrong')">Χρονική</button>
+        </div>
+        <div class="feedback" id="fb-b1-1"></div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <p style="font-size:0.89rem;margin-bottom:6px;">β) Τρέξε <span style="text-decoration:underline;font-weight:700;color:#8e44ad">για να προλάβεις το λεωφορείο</span>.</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'b1-2','Αιτιολογική','wrong')">Αιτιολογική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-2','Τελική','correct')">Τελική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-2','Αποτελεσματική','wrong')">Αποτελεσματική</button>
+        </div>
+        <div class="feedback" id="fb-b1-2"></div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <p style="font-size:0.89rem;margin-bottom:6px;">γ) <span style="text-decoration:underline;font-weight:700;color:#8e44ad">Όταν έφτασε</span>, όλοι χειροκρότησαν.</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'b1-3','Υποθετική','wrong')">Υποθετική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-3','Χρονική','correct')">Χρονική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-3','Τελική','wrong')">Τελική</button>
+        </div>
+        <div class="feedback" id="fb-b1-3"></div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <p style="font-size:0.89rem;margin-bottom:6px;">δ) Μίλησε τόσο δυνατά <span style="text-decoration:underline;font-weight:700;color:#8e44ad">ώστε τον άκουσαν όλοι</span>.</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'b1-4','Αποτελεσματική','correct')">Αποτελεσματική/Συμπερασματική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-4','Αιτιολογική','wrong')">Αιτιολογική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-4','Χρονική','wrong')">Χρονική</button>
+        </div>
+        <div class="feedback" id="fb-b1-4"></div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <p style="font-size:0.89rem;margin-bottom:6px;">ε) <span style="text-decoration:underline;font-weight:700;color:#8e44ad">Αν βρέξει</span>, δεν πάμε εκδρομή.</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'b1-5','Υποθετική','correct')">Υποθετική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-5','Χρονική','wrong')">Χρονική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-5','Εναντιωματική','wrong')">Εναντιωματική</button>
+        </div>
+        <div class="feedback" id="fb-b1-5"></div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <p style="font-size:0.89rem;margin-bottom:6px;">στ) Ήξερα <span style="text-decoration:underline;font-weight:700;color:#8e44ad">ότι θα τα κατάφερνε</span>.</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'b1-6','Τελική','wrong')">Τελική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-6','Αντικειμενική','correct')">Αντικειμενική (αντικ. ρήματος)</button>
+          <button class="opt-btn" onclick="selectOpt(this,'b1-6','Αιτιολογική','wrong')">Αιτιολογική</button>
+        </div>
+        <div class="feedback" id="fb-b1-6"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Match connector to type -->
+  <div class="ex-card">
+    <h3><span class="ex-num">2</span> Ταίριαξε τον σύνδεσμο με το είδος της εξαρτημένης</h3>
+    <div class="match-grid" id="match-b2">
+      <div class="match-item" data-correct="Χρονική">
+        <strong>όταν</strong> →
+        <select onchange="checkMatchItem(this)">
+          <option value="">—</option>
+          <option>Αιτιολογική</option>
+          <option>Τελική</option>
+          <option>Χρονική</option>
+          <option>Υποθετική</option>
+          <option>Εναντιωματική</option>
+          <option>Αποτελεσματική</option>
+          <option>Αντικειμενική</option>
+        </select>
+      </div>
+      <div class="match-item" data-correct="Τελική">
+        <strong>για να</strong> →
+        <select onchange="checkMatchItem(this)">
+          <option value="">—</option>
+          <option>Αιτιολογική</option>
+          <option>Τελική</option>
+          <option>Χρονική</option>
+          <option>Υποθετική</option>
+          <option>Εναντιωματική</option>
+          <option>Αποτελεσματική</option>
+          <option>Αντικειμενική</option>
+        </select>
+      </div>
+      <div class="match-item" data-correct="Αιτιολογική">
+        <strong>επειδή</strong> →
+        <select onchange="checkMatchItem(this)">
+          <option value="">—</option>
+          <option>Αιτιολογική</option>
+          <option>Τελική</option>
+          <option>Χρονική</option>
+          <option>Υποθετική</option>
+          <option>Εναντιωματική</option>
+          <option>Αποτελεσματική</option>
+          <option>Αντικειμενική</option>
+        </select>
+      </div>
+      <div class="match-item" data-correct="Εναντιωματική">
+        <strong>μολονότι</strong> →
+        <select onchange="checkMatchItem(this)">
+          <option value="">—</option>
+          <option>Αιτιολογική</option>
+          <option>Τελική</option>
+          <option>Χρονική</option>
+          <option>Υποθετική</option>
+          <option>Εναντιωματική</option>
+          <option>Αποτελεσματική</option>
+          <option>Αντικειμενική</option>
+        </select>
+      </div>
+      <div class="match-item" data-correct="Αποτελεσματική">
+        <strong>ώστε</strong> →
+        <select onchange="checkMatchItem(this)">
+          <option value="">—</option>
+          <option>Αιτιολογική</option>
+          <option>Τελική</option>
+          <option>Χρονική</option>
+          <option>Υποθετική</option>
+          <option>Εναντιωματική</option>
+          <option>Αποτελεσματική</option>
+          <option>Αντικειμενική</option>
+        </select>
+      </div>
+      <div class="match-item" data-correct="Υποθετική">
+        <strong>αν</strong> →
+        <select onchange="checkMatchItem(this)">
+          <option value="">—</option>
+          <option>Αιτιολογική</option>
+          <option>Τελική</option>
+          <option>Χρονική</option>
+          <option>Υποθετική</option>
+          <option>Εναντιωματική</option>
+          <option>Αποτελεσματική</option>
+          <option>Αντικειμενική</option>
+        </select>
+      </div>
+    </div>
+    <div class="feedback" id="fb-match-b2"></div>
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkMatchB2()">Έλεγχος</button>
+      <button class="btn btn-reset" onclick="resetMatchB2()">Επαναφορά</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ΑΝΤΙΘΕΤΙΚΟΙ ============ -->
+<div class="section" id="antithetikoiS">
+
+  <div class="ex-card">
+    <h3><span class="ex-num">1</span> Επίλεξε τον κατάλληλο αντιθετικό σύνδεσμο</h3>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-size:0.89rem;margin-bottom:6px;">α) Προσπάθησε πολύ, <span id="c1-1-blank" style="font-weight:700;color:var(--purple)"></span> δεν τα κατάφερε.</p>
+      <div class="options-row">
+        <button class="opt-btn" onclick="selectOpt(this,'c1-1','αλλά','correct')">αλλά</button>
+        <button class="opt-btn" onclick="selectOpt(this,'c1-1','και','wrong')">και</button>
+        <button class="opt-btn" onclick="selectOpt(this,'c1-1','γιατί','wrong')">γιατί</button>
+      </div>
+      <div class="feedback" id="fb-c1-1"></div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-size:0.89rem;margin-bottom:6px;">β) Ήθελε να παίξει· <span id="c1-2-blank" style="font-weight:700;color:var(--purple)"></span> έπρεπε να διαβάσει.</p>
+      <div class="options-row">
+        <button class="opt-btn" onclick="selectOpt(this,'c1-2','ωστόσο','correct')">ωστόσο</button>
+        <button class="opt-btn" onclick="selectOpt(this,'c1-2','επειδή','wrong')">επειδή</button>
+        <button class="opt-btn" onclick="selectOpt(this,'c1-2','ή','wrong')">ή</button>
+      </div>
+      <div class="feedback" id="fb-c1-2"></div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-size:0.89rem;margin-bottom:6px;">γ) Έφαγε πολύ, <span id="c1-3-blank" style="font-weight:700;color:var(--purple)"></span> είπε ότι δεν πεινούσε.</p>
+      <div class="options-row">
+        <button class="opt-btn" onclick="selectOpt(this,'c1-3','μα','correct')">μα</button>
+        <button class="opt-btn" onclick="selectOpt(this,'c1-3','ούτε','wrong')">ούτε</button>
+        <button class="opt-btn" onclick="selectOpt(this,'c1-3','για να','wrong')">για να</button>
+      </div>
+      <div class="feedback" id="fb-c1-3"></div>
+    </div>
+  </div>
+
+  <div class="ex-card">
+    <h3><span class="ex-num">2</span> Εναντιωματικές/Παραχωρητικές — Βρες τον σύνδεσμο</h3>
+    <p style="font-size:0.82rem;color:#666;margin-bottom:12px;">Πρόταση με εξαρτημένη εναντιωματική ή παρατακτική αντίθεση;</p>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-size:0.88rem;font-style:italic;margin-bottom:6px;">«<span style="text-decoration:underline;font-weight:700">Αν και ήταν κουρασμένος</span>, δεν παραπονέθηκε καθόλου.»</p>
+      <div class="options-row">
+        <button class="opt-btn" onclick="selectOpt(this,'c2-1','Εξαρτημένη εναντιωματική','correct')">Εξαρτημένη εναντιωματική</button>
+        <button class="opt-btn" onclick="selectOpt(this,'c2-1','Παρατακτική αντίθεση','wrong')">Παρατακτική αντίθεση</button>
+      </div>
+      <div class="feedback" id="fb-c2-1"></div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-size:0.88rem;font-style:italic;margin-bottom:6px;">«Της μίλησε ωραία, <span style="text-decoration:underline;font-weight:700">αλλά</span> εκείνη δεν απάντησε.»</p>
+      <div class="options-row">
+        <button class="opt-btn" onclick="selectOpt(this,'c2-2','Εξαρτημένη εναντιωματική','wrong')">Εξαρτημένη εναντιωματική</button>
+        <button class="opt-btn" onclick="selectOpt(this,'c2-2','Παρατακτική αντίθεση','correct')">Παρατακτική αντίθεση</button>
+      </div>
+      <div class="feedback" id="fb-c2-2"></div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-size:0.88rem;font-style:italic;margin-bottom:6px;">«<span style="text-decoration:underline;font-weight:700">Ενώ έβρεχε</span>, τα παιδιά έπαιζαν έξω.»</p>
+      <div class="options-row">
+        <button class="opt-btn" onclick="selectOpt(this,'c2-3','Εξαρτημένη εναντιωματική','correct')">Εξαρτημένη εναντιωματική</button>
+        <button class="opt-btn" onclick="selectOpt(this,'c2-3','Παρατακτική αντίθεση','wrong')">Παρατακτική αντίθεση</button>
+      </div>
+      <div class="feedback" id="fb-c2-3"></div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-size:0.88rem;font-style:italic;margin-bottom:6px;">«Δεν το ήξερε πολύ καλά, <span style="text-decoration:underline;font-weight:700">όμως</span> τον συμπαθούσε.»</p>
+      <div class="options-row">
+        <button class="opt-btn" onclick="selectOpt(this,'c2-4','Εξαρτημένη εναντιωματική','wrong')">Εξαρτημένη εναντιωματική</button>
+        <button class="opt-btn" onclick="selectOpt(this,'c2-4','Παρατακτική αντίθεση','correct')">Παρατακτική αντίθεση</button>
+      </div>
+      <div class="feedback" id="fb-c2-4"></div>
+    </div>
+  </div>
+
+  <!-- Όχι μόνο... αλλά και -->
+  <div class="ex-card">
+    <h3><span class="ex-num">3</span> Συμπλήρωσε με «όχι μόνο… αλλά και»</h3>
+    <p style="font-size:0.82rem;color:#666;margin-bottom:12px;">Ξαναγράψε τις παρακάτω προτάσεις χρησιμοποιώντας <strong>όχι μόνο… αλλά και</strong> για να δώσεις έμφαση. (Γράψε στο χαρτί σου — αυτή είναι άσκηση παραγωγής!)</p>
+    <div style="background:#f8f0ff;border-radius:10px;padding:14px 16px;font-size:0.87rem;line-height:1.8;">
+      <p style="margin-bottom:8px;"><strong>Παράδειγμα:</strong><br>
+      <em>Ταξιδεύουν πολλοί τουρίστες από χώρα σε χώρα και από εποχή σε εποχή.</em><br>
+      → Ταξιδεύουν πολλοί τουρίστες <strong>όχι μόνο</strong> από χώρα σε χώρα <strong>αλλά και</strong> από εποχή σε εποχή.</p>
+      <hr style="border:none;border-top:1px solid #d0c0e0;margin:10px 0;">
+      <p style="margin-bottom:6px;">α) Χθες χιόνισε στην Αθήνα και στη Θεσσαλονίκη.</p>
+      <p style="margin-bottom:6px;">β) Η Μαρία μαγειρεύει ωραία και είναι καλή μαθήτρια.</p>
+      <p>γ) Τους αρέσει η θάλασσα και το βουνό.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ΤΑΞΙΝΟΜΗΣΗ ============ -->
+<div class="section" id="classify">
+  <div class="ex-card">
+    <h3><span class="ex-num">1</span> Ταξινόμησε τους συνδέσμους</h3>
+    <p style="font-size:0.82rem;color:#666;margin-bottom:12px;">Σύρε (ή πάτα) κάθε σύνδεσμο στη σωστή κατηγορία.</p>
+
+    <div class="drag-area" id="chip-pool">
+      <span class="draggable" draggable="true" data-cat="para">και</span>
+      <span class="draggable" draggable="true" data-cat="ypo">επειδή</span>
+      <span class="draggable" draggable="true" data-cat="para">αλλά</span>
+      <span class="draggable" draggable="true" data-cat="ypo">για να</span>
+      <span class="draggable" draggable="true" data-cat="para">ούτε</span>
+      <span class="draggable" draggable="true" data-cat="ypo">αν</span>
+      <span class="draggable" draggable="true" data-cat="ypo">ότι</span>
+      <span class="draggable" draggable="true" data-cat="para">ή</span>
+      <span class="draggable" draggable="true" data-cat="ypo">όταν</span>
+      <span class="draggable" draggable="true" data-cat="ypo">ώστε</span>
+      <span class="draggable" draggable="true" data-cat="para">όμως</span>
+      <span class="draggable" draggable="true" data-cat="ypo">μολονότι</span>
+    </div>
+
+    <div class="classify-grid">
+      <div class="class-col">
+        <div class="class-header blue">Παρατακτικοί</div>
+        <div class="class-body drop-zone" id="zone-para" data-cat="para"></div>
+      </div>
+      <div class="class-col">
+        <div class="class-header green">Υποτακτικοί</div>
+        <div class="class-body drop-zone" id="zone-ypo" data-cat="ypo"></div>
+      </div>
+    </div>
+
+    <div class="feedback" id="fb-classify"></div>
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkClassify()">Έλεγχος</button>
+      <button class="btn btn-reset" onclick="resetClassify()">Επαναφορά</button>
+    </div>
+  </div>
+
+  <div class="ex-card">
+    <h3><span class="ex-num">2</span> Ποιο είδος σύνδεσης; Γράψε τον αριθμό</h3>
+    <p style="font-size:0.82rem;color:#666;margin-bottom:12px;">Α = Παρατακτική &nbsp;|&nbsp; Β = Υποτακτική &nbsp;|&nbsp; Γ = Ασύνδετο σχήμα</p>
+    <div id="classify2-rows">
+      <div style="margin-bottom:14px">
+        <p style="font-size:0.88rem;font-style:italic;margin-bottom:5px;">«Ήρθε, είδε, νίκησε.»</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'d2-1','Α','wrong')">Α – Παρατακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'d2-1','Β','wrong')">Β – Υποτακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'d2-1','Γ','correct')">Γ – Ασύνδετο</button>
+        </div>
+        <div class="feedback" id="fb-d2-1"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <p style="font-size:0.88rem;font-style:italic;margin-bottom:5px;">«Αγαπάς τη μουσική <em>ή</em> τον αθλητισμό;»</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'d2-2','Α','correct')">Α – Παρατακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'d2-2','Β','wrong')">Β – Υποτακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'d2-2','Γ','wrong')">Γ – Ασύνδετο</button>
+        </div>
+        <div class="feedback" id="fb-d2-2"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <p style="font-size:0.88rem;font-style:italic;margin-bottom:5px;">«Πήγαν εκεί <em>για να</em> βοηθήσουν.»</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'d2-3','Α','wrong')">Α – Παρατακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'d2-3','Β','correct')">Β – Υποτακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'d2-3','Γ','wrong')">Γ – Ασύνδετο</button>
+        </div>
+        <div class="feedback" id="fb-d2-3"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <p style="font-size:0.88rem;font-style:italic;margin-bottom:5px;">«Γέλασε, χάρηκε, αγκάλιασε τη φίλη της.»</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'d2-4','Α','wrong')">Α – Παρατακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'d2-4','Β','wrong')">Β – Υποτακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'d2-4','Γ','correct')">Γ – Ασύνδετο</button>
+        </div>
+        <div class="feedback" id="fb-d2-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ΚΕΙΜΕΝΟ ============ -->
+<div class="section" id="passage">
+  <div class="ex-card">
+    <h3><span class="ex-num">1</span> Βρες τους μαυρισμένους συνδέσμους στο κείμενο</h3>
+    <p style="font-size:0.82rem;color:#666;margin-bottom:10px;">Διάβασε το κείμενο. Για κάθε υπογραμμισμένο σύνδεσμο, επίλεξε το είδος της σύνδεσης.</p>
+
+    <div class="passage">
+      Φέραμε τον παππού <strong>[1] να</strong> μείνει στο σπίτι μας, τον ταΐσαμε, τον στρώσαμε το κρεβάτι που θα κοιμάται, τον βοηθήσαμε να ξαπλώσει, του είπαμε κι ένα τραγουδάκι <strong>[2] πριν</strong> κοιμηθεί, <strong>[3] κι όταν</strong> άρχισε να νυστάζει πολύ, τον φιλήσαμε και οι δύο <strong>[4] και</strong> σβήσαμε εγώ το φως <strong>[5] επειδή</strong> φτάνω πιο εύκολα τον διακόπτη.
+    </div>
+
+    <div id="passage-q">
+      <div style="margin-bottom:14px">
+        <p style="font-size:0.88rem;margin-bottom:6px;"><strong>[1] «να»</strong> — Τι είδους εξαρτημένη πρόταση εισάγει;</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'p-1','Τελική','correct')">Τελική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'p-1','Αιτιολογική','wrong')">Αιτιολογική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'p-1','Αντικειμενική','wrong')">Αντικειμενική</button>
+        </div>
+        <div class="feedback" id="fb-p-1"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <p style="font-size:0.88rem;margin-bottom:6px;"><strong>[2] «πριν»</strong> — Τι είδους εξαρτημένη πρόταση;</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'p-2','Υποθετική','wrong')">Υποθετική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'p-2','Χρονική','correct')">Χρονική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'p-2','Τελική','wrong')">Τελική</button>
+        </div>
+        <div class="feedback" id="fb-p-2"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <p style="font-size:0.88rem;margin-bottom:6px;"><strong>[3] «όταν»</strong> — Τι είδους εξαρτημένη πρόταση;</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'p-3','Χρονική','correct')">Χρονική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'p-3','Υποθετική','wrong')">Υποθετική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'p-3','Αποτελεσματική','wrong')">Αποτελεσματική</button>
+        </div>
+        <div class="feedback" id="fb-p-3"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <p style="font-size:0.88rem;margin-bottom:6px;"><strong>[4] «και»</strong> — Τι είδους σύνδεση κάνει;</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'p-4','Παρατακτική','correct')">Παρατακτική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'p-4','Υποτακτική','wrong')">Υποτακτική</button>
+        </div>
+        <div class="feedback" id="fb-p-4"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <p style="font-size:0.88rem;margin-bottom:6px;"><strong>[5] «επειδή»</strong> — Τι είδους εξαρτημένη πρόταση;</p>
+        <div class="options-row">
+          <button class="opt-btn" onclick="selectOpt(this,'p-5','Αιτιολογική','correct')">Αιτιολογική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'p-5','Τελική','wrong')">Τελική</button>
+          <button class="opt-btn" onclick="selectOpt(this,'p-5','Χρονική','wrong')">Χρονική</button>
+        </div>
+        <div class="feedback" id="fb-p-5"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ex-card">
+    <h3><span class="ex-num">2</span> Βρες ασύνδετα σχήματα στο κείμενο</h3>
+    <p style="font-size:0.82rem;color:#666;margin-bottom:10px;">Ποια από τις παρακάτω ομάδες αποτελεί ασύνδετο σχήμα;</p>
+    <div id="asynd-q">
+      <div style="margin-bottom:12px">
+        <div class="options-row" style="flex-direction:column;align-items:flex-start;">
+          <button class="opt-btn" style="width:100%;text-align:left;margin-bottom:6px" onclick="selectOpt(this,'as-1','wrong')">α) «τον ταΐσαμε… <strong>και</strong> τον στρώσαμε…»</button>
+          <button class="opt-btn" style="width:100%;text-align:left;margin-bottom:6px" onclick="selectOpt(this,'as-1','correct')">β) «τον ταΐσαμε, τον στρώσαμε, τον βοηθήσαμε…» (χωρίς σύνδεσμο)</button>
+          <button class="opt-btn" style="width:100%;text-align:left" onclick="selectOpt(this,'as-1','wrong')">γ) «φτάνω πιο εύκολα τον διακόπτη <strong>επειδή</strong>…»</button>
+        </div>
+        <div class="feedback" id="fb-as-1"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>© myspiderwebsite</footer>
+
+<script>
+// ---- TAB ----
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ---- OPTION BUTTONS ----
+const answers = {};
+function selectOpt(btn, key, val, correct) {
+  // Deselect siblings
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.opt-btn').forEach(b => {
+    b.classList.remove('selected','correct','wrong');
+  });
+  btn.classList.add('selected');
+  answers[key] = val;
+
+  const fb = document.getElementById('fb-' + key);
+  if (!fb) return;
+  fb.classList.add('show');
+  if (correct === 'correct') {
+    btn.classList.add('correct');
+    fb.className = 'feedback show ok';
+    fb.textContent = '✅ Σωστό!';
+  } else {
+    btn.classList.add('wrong');
+    fb.className = 'feedback show err';
+    fb.textContent = '❌ Λάθος. Ξαναπρόσπάθησε!';
+  }
+}
+
+// ---- DRAG & DROP CLASSIFY ----
+let dragEl = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  initDrag();
+});
+
+function initDrag() {
+  document.querySelectorAll('.draggable').forEach(el => {
+    el.addEventListener('dragstart', e => {
+      dragEl = el;
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    el.addEventListener('click', () => {
+      // On mobile tap: cycle through zones
+      const zones = document.querySelectorAll('.drop-zone');
+      if (el.parentElement.id === 'chip-pool') {
+        // Move to first zone (or based on category)
+        const cat = el.dataset.cat;
+        const zone = document.getElementById('zone-' + cat) || zones[0];
+        zone.appendChild(el);
+      } else {
+        // Return to pool
+        document.getElementById('chip-pool').appendChild(el);
+      }
+    });
+  });
+
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('over');
+      if (dragEl) zone.appendChild(dragEl);
+      dragEl = null;
+    });
+  });
+}
+
+function checkClassify() {
+  const zones = { para: document.getElementById('zone-para'), ypo: document.getElementById('zone-ypo') };
+  let correct = 0, total = 0;
+  document.querySelectorAll('#zone-para .draggable, #zone-ypo .draggable').forEach(chip => {
+    total++;
+    const parentZone = chip.parentElement.id.replace('zone-','');
+    if (chip.dataset.cat === parentZone) { correct++; chip.style.background='var(--green)'; }
+    else { chip.style.background='var(--red)'; }
+  });
+  const pool = document.getElementById('chip-pool').querySelectorAll('.draggable').length;
+  const fb = document.getElementById('fb-classify');
+  fb.classList.add('show');
+  if (pool > 0) {
+    fb.className='feedback show partial';
+    fb.textContent = `⚠️ Υπάρχουν ${pool} σύνδεσμοι που δεν έχεις τοποθετήσει ακόμα! ${correct}/${total} σωστά.`;
+  } else if (correct === total) {
+    fb.className='feedback show ok';
+    fb.textContent = `✅ Μπράβο! Όλα σωστά (${correct}/${total})!`;
+  } else {
+    fb.className='feedback show err';
+    fb.textContent = `❌ ${correct}/${total} σωστά. Ξαναδές τους κόκκινους!`;
+  }
+}
+
+function resetClassify() {
+  const pool = document.getElementById('chip-pool');
+  document.querySelectorAll('#zone-para .draggable, #zone-ypo .draggable').forEach(chip => {
+    chip.style.background = '';
+    pool.appendChild(chip);
+  });
+  const fb = document.getElementById('fb-classify');
+  fb.classList.remove('show');
+}
+
+// ---- MATCH B2 ----
+function checkMatchItem(sel) {
+  const item = sel.parentElement;
+  const correct = item.dataset.correct;
+  item.classList.remove('correct-item','wrong-item');
+  if (sel.value === correct) item.classList.add('correct-item');
+  else if (sel.value) item.classList.add('wrong-item');
+}
+
+function checkMatchB2() {
+  let ok = 0, total = 0;
+  document.querySelectorAll('#match-b2 .match-item').forEach(item => {
+    total++;
+    const sel = item.querySelector('select');
+    if (item.dataset.correct === sel.value) ok++;
+  });
+  const fb = document.getElementById('fb-match-b2');
+  fb.classList.add('show');
+  if (ok === total) { fb.className='feedback show ok'; fb.textContent=`✅ Τέλεια! ${ok}/${total} σωστά!`; }
+  else { fb.className='feedback show err'; fb.textContent=`❌ ${ok}/${total} σωστά. Ξαναδές τα κόκκινα!`; }
+}
+
+function resetMatchB2() {
+  document.querySelectorAll('#match-b2 .match-item').forEach(item => {
+    item.classList.remove('correct-item','wrong-item');
+    item.querySelector('select').value='';
+  });
+  document.getElementById('fb-match-b2').classList.remove('show');
+}
+</script>
+</body>
+</html>
