@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz: Σύνδεση Προτάσεων</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f0c29;
+  --bg2: #1a1550;
+  --card: #1e1a5e;
+  --yellow: #ffd700;
+  --orange: #ff7b00;
+  --pink: #ff4d8d;
+  --cyan: #00e5ff;
+  --green: #00e676;
+  --red: #ff1744;
+  --white: #ffffff;
+  --text-dim: rgba(255,255,255,0.7);
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* STARS BACKGROUND */
+.stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle var(--d, 3s) var(--delay, 0s) infinite alternate;
+  opacity: 0.4;
+}
+@keyframes twinkle { from { opacity: 0.1; transform: scale(0.8); } to { opacity: 0.9; transform: scale(1.2); } }
+
+/* SCREENS */
+.screen { display: none; position: relative; z-index: 1; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+
+/* ===== START SCREEN ===== */
+#start-screen {
+  text-align: center;
+  gap: 24px;
+}
+
+.game-logo {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(2.2rem, 8vw, 3.8rem);
+  background: linear-gradient(135deg, var(--yellow), var(--orange), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  line-height: 1.1;
+  animation: logoPulse 2.5s ease-in-out infinite;
+}
+@keyframes logoPulse {
+  0%,100% { filter: drop-shadow(0 0 20px rgba(255,215,0,0.4)); }
+  50% { filter: drop-shadow(0 0 40px rgba(255,215,0,0.8)); }
+}
+
+.game-subtitle {
+  font-size: 1rem;
+  color: var(--text-dim);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.info-pills {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.pill {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+.btn-start {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, var(--yellow), var(--orange));
+  color: #1a0a00;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 50px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 30px rgba(255,123,0,0.5);
+  transition: transform 0.15s, box-shadow 0.15s;
+  animation: btnBounce 1.8s ease-in-out infinite;
+}
+@keyframes btnBounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.btn-start:hover { transform: scale(1.06) translateY(-3px); box-shadow: 0 12px 40px rgba(255,123,0,0.7); animation: none; }
+.btn-start:active { transform: scale(0.97); }
+
+/* ===== QUIZ SCREEN ===== */
+#quiz-screen {
+  justify-content: flex-start;
+  padding: 16px;
+  gap: 0;
+}
+
+/* TOP BAR */
+.top-bar {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.score-display {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  color: var(--yellow);
+  min-width: 80px;
+  text-align: center;
+}
+.score-label { font-size: 0.65rem; display: block; color: var(--text-dim); font-family: 'Nunito', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+.progress-wrap { flex: 1; }
+.progress-track {
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--pink));
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+.q-counter { font-size: 0.75rem; color: var(--text-dim); font-weight: 700; text-align: center; margin-top: 4px; }
+
+/* TIMER */
+.timer-ring-wrap {
+  position: relative;
+  width: 56px; height: 56px;
+  flex-shrink: 0;
+}
+.timer-ring {
+  transform: rotate(-90deg);
+  width: 56px; height: 56px;
+}
+.timer-bg { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 5; }
+.timer-arc {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 138.23;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s;
+}
+.timer-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.15rem;
+  color: var(--white);
+}
+
+/* QUESTION CARD */
+.q-card {
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 22px 20px;
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+  margin-bottom: 16px;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+.q-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--pink), var(--yellow));
+}
+
+.q-category {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 10px;
+}
+
+.q-text {
+  font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--white);
+}
+.q-text em {
+  background: rgba(255,215,0,0.18);
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-style: normal;
+  color: var(--yellow);
+  font-weight: 900;
+}
+
+/* ANSWER BUTTONS */
+.answers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 700px;
+}
+@media(max-width: 480px) {
+  .answers-grid { grid-template-columns: 1fr; }
+}
+
+.ans-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 16px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(0.82rem, 3vw, 1rem);
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, filter 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+.ans-btn:active { transform: scale(0.96); }
+.ans-btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); filter: brightness(1.15); }
+
+.ans-btn:nth-child(1) { background: linear-gradient(135deg, #e74c3c, #c0392b); box-shadow: 0 4px 18px rgba(231,76,60,0.4); }
+.ans-btn:nth-child(2) { background: linear-gradient(135deg, #3498db, #2980b9); box-shadow: 0 4px 18px rgba(52,152,219,0.4); }
+.ans-btn:nth-child(3) { background: linear-gradient(135deg, #f39c12, #e67e22); box-shadow: 0 4px 18px rgba(243,156,18,0.4); }
+.ans-btn:nth-child(4) { background: linear-gradient(135deg, #27ae60, #1e8449); box-shadow: 0 4px 18px rgba(39,174,96,0.4); }
+
+.ans-icon {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  font-weight: 900;
+}
+
+.ans-btn.correct {
+  animation: flashCorrect 0.5s forwards;
+  box-shadow: 0 0 40px rgba(0,230,118,0.8) !important;
+}
+.ans-btn.wrong {
+  animation: flashWrong 0.4s forwards;
+  filter: brightness(0.5);
+}
+.ans-btn.reveal-correct {
+  animation: flashCorrect 0.5s forwards;
+  box-shadow: 0 0 40px rgba(0,230,118,0.8) !important;
+}
+
+@keyframes flashCorrect {
+  0% { background: linear-gradient(135deg, #00e676, #00c853); }
+  50% { transform: scale(1.06); }
+  100% { background: linear-gradient(135deg, #00e676, #00c853); }
+}
+@keyframes flashWrong {
+  0%,100% { opacity: 1; }
+  25%,75% { opacity: 0.4; }
+}
+
+.ans-btn:disabled { cursor: default; }
+
+/* FEEDBACK OVERLAY */
+.feedback-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.feedback-overlay.show { opacity: 1; pointer-events: none; }
+
+.feedback-emoji {
+  font-size: 5rem;
+  animation: popIn 0.4s cubic-bezier(0.36,0.07,0.19,0.97);
+}
+.feedback-text {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  margin-top: 10px;
+  text-shadow: 0 0 30px currentColor;
+}
+.feedback-overlay.correct-fb { background: rgba(0,230,118,0.15); }
+.feedback-overlay.wrong-fb { background: rgba(255,23,68,0.12); }
+
+@keyframes popIn {
+  0% { transform: scale(0) rotate(-15deg); }
+  60% { transform: scale(1.3) rotate(5deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+/* POINTS POPUP */
+.points-popup {
+  position: fixed;
+  top: 30%;
+  right: 10%;
+  font-family: 'Fredoka One', cursive;
+  font-size: 2.5rem;
+  color: var(--yellow);
+  text-shadow: 0 0 20px rgba(255,215,0,0.8);
+  pointer-events: none;
+  animation: floatUp 1.2s ease-out forwards;
+  z-index: 200;
+}
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0) scale(0.8); }
+  50% { opacity: 1; transform: translateY(-40px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-90px) scale(0.9); }
+}
+
+/* STREAK */
+.streak-badge {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--orange), var(--pink));
+  border-radius: 30px;
+  padding: 8px 20px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  z-index: 150;
+  display: none;
+  animation: slideDown 0.3s ease;
+  box-shadow: 0 4px 20px rgba(255,77,141,0.5);
+}
+@keyframes slideDown { from { transform: translateX(-50%) translateY(-20px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+
+/* CONFETTI */
+.confetti-piece {
+  position: fixed;
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 300;
+  animation: confettiFall var(--dur, 2s) var(--delay, 0s) ease-in forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-20px) rotate(0deg) translateX(0); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg) translateX(var(--drift, 0px)); opacity: 0; }
+}
+
+/* ===== END SCREEN ===== */
+#end-screen {
+  text-align: center;
+  gap: 20px;
+}
+
+.trophy {
+  font-size: 5rem;
+  animation: trophySpin 1s ease-out;
+}
+@keyframes trophySpin {
+  0% { transform: scale(0) rotate(-180deg); }
+  70% { transform: scale(1.2) rotate(10deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.end-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1.8rem, 7vw, 3rem);
+  background: linear-gradient(135deg, var(--yellow), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.final-score-wrap {
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 24px 36px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.final-score-num {
+  font-family: 'Fredoka One', cursive;
+  font-size: 3.5rem;
+  color: var(--yellow);
+  line-height: 1;
+}
+.final-score-label { font-size: 0.8rem; color: var(--text-dim); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+.stars-row { font-size: 2.5rem; letter-spacing: 4px; }
+
+.result-msg {
+  font-size: 1rem;
+  color: var(--text-dim);
+  font-weight: 700;
+  max-width: 340px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.stat-box {
+  background: rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 14px 20px;
+  text-align: center;
+  min-width: 90px;
+}
+.stat-num { font-family: 'Fredoka One', cursive; font-size: 1.6rem; }
+.stat-lbl { font-size: 0.7rem; color: var(--text-dim); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+.btn-replay {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  background: linear-gradient(135deg, var(--cyan), #0096ff);
+  color: #003050;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 40px;
+  cursor: pointer;
+  box-shadow: 0 6px 25px rgba(0,229,255,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.5px;
+}
+.btn-replay:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 10px 35px rgba(0,229,255,0.6); }
+
+footer { position: relative; z-index: 1; text-align: center; padding: 16px; font-size: 0.72rem; color: rgba(255,255,255,0.25); }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="start-screen">
+  <div class="game-logo">⚡ Σύνδεση<br>Προτάσεων</div>
+  <div class="game-subtitle">Γλώσσα · Στ΄ Δημοτικού</div>
+  <div class="info-pills">
+    <span class="pill">🎯 20 ερωτήσεις</span>
+    <span class="pill">⏱ 15 δευτερόλεπτα</span>
+    <span class="pill">🏆 Βαθμολογία</span>
+  </div>
+  <button class="btn-start" onclick="startGame()">ΠΑΙΞΕ ΤΩΡΑ!</button>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="screen" id="quiz-screen">
+  <div class="top-bar">
+    <div class="score-display">
+      <span class="score-label">ΣΚΟΡ</span>
+      <span id="score-val">0</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="q-counter" id="q-counter">Ερώτηση 1 / 20</div>
+    </div>
+    <div class="timer-ring-wrap">
+      <svg class="timer-ring" viewBox="0 0 48 48">
+        <circle class="timer-bg" cx="24" cy="24" r="22"/>
+        <circle class="timer-arc" id="timer-arc" cx="24" cy="24" r="22"/>
+      </svg>
+      <div class="timer-num" id="timer-num">15</div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-category" id="q-category">ΚΑΤΗΓΟΡΙΑ</div>
+    <div class="q-text" id="q-text">Ερώτηση...</div>
+  </div>
+
+  <div class="answers-grid" id="answers-grid"></div>
+</div>
+
+<!-- END SCREEN -->
+<div class="screen" id="end-screen">
+  <div class="trophy" id="trophy">🏆</div>
+  <div class="end-title" id="end-title">Μπράβο!</div>
+  <div class="final-score-wrap">
+    <div class="final-score-num" id="final-score">0</div>
+    <div class="final-score-label">πόντοι</div>
+  </div>
+  <div class="stars-row" id="stars-row">⭐⭐⭐</div>
+  <div class="result-msg" id="result-msg"></div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="stat-correct" style="color:var(--green)">0</div><div class="stat-lbl">Σωστά</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-wrong" style="color:var(--red)">0</div><div class="stat-lbl">Λάθη</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-streak" style="color:var(--yellow)">0</div><div class="stat-lbl">Max σερί</div></div>
+  </div>
+  <button class="btn-replay" onclick="restartGame()">🔄 Παίξε ξανά!</button>
+</div>
+
+<div class="feedback-overlay" id="feedback-overlay">
+  <div class="feedback-emoji" id="fb-emoji"></div>
+  <div class="feedback-text" id="fb-text"></div>
+</div>
+
+<div class="streak-badge" id="streak-badge"></div>
+
+<footer>© myspiderwebsite</footer>
+
+<script>
+// ===== QUESTIONS =====
+const ALL_QUESTIONS = [
+  // ΠΑΡΑΤΑΚΤΙΚΗ
+  { cat: "🔵 ΠΑΡΑΤΑΚΤΙΚΗ", q: 'Πώς λέγεται η σύνδεση όταν δύο <em>ανεξάρτητες</em> προτάσεις συνδέονται με σύνδεσμο;', opts: ['Παρατακτική', 'Υποτακτική', 'Ασύνδετο σχήμα', 'Εναντιωματική'], ans: 0 },
+  { cat: "🔵 ΠΑΡΑΤΑΚΤΙΚΗ", q: 'Ποιος από τους παρακάτω είναι <em>παρατακτικός</em> σύνδεσμος;', opts: ['επειδή', 'όταν', 'αλλά', 'για να'], ans: 2 },
+  { cat: "🔵 ΠΑΡΑΤΑΚΤΙΚΗ", q: 'Συμπλήρωσε: «Πήγα στον κήπο ___ περίμενα τον μπαμπά.»', opts: ['γιατί', 'και', 'ώστε', 'αν'], ans: 1 },
+  { cat: "🔵 ΠΑΡΑΤΑΚΤΙΚΗ", q: 'Ποιο ΔΕΝ είναι παρατακτικός σύνδεσμος;', opts: ['ή', 'ούτε', 'μα', 'μολονότι'], ans: 3 },
+  { cat: "🔵 ΠΑΡΑΤΑΚΤΙΚΗ", q: 'Στο ασύνδετο σχήμα οι προτάσεις συνδέονται με...', opts: ['σύνδεσμο «και»', 'μόνο κόμματα, χωρίς σύνδεσμο', 'υποτακτικό σύνδεσμο', 'αντιθετικό σύνδεσμο'], ans: 1 },
+
+  // ΥΠΟΤΑΚΤΙΚΗ
+  { cat: "🟢 ΥΠΟΤΑΚΤΙΚΗ", q: 'Στη <em>υποτακτική σύνδεση</em> έχουμε...', opts: ['δύο ανεξάρτητες προτάσεις', 'μια ανεξάρτητη + μια εξαρτημένη', 'μόνο κόμματα', 'δύο εξαρτημένες'], ans: 1 },
+  { cat: "🟢 ΥΠΟΤΑΚΤΙΚΗ", q: '«Έφυγε νωρίς <em>επειδή</em> είχε εξετάσεις.» — Τι είδους εξαρτημένη πρόταση;', opts: ['Τελική', 'Χρονική', 'Αιτιολογική', 'Υποθετική'], ans: 2 },
+  { cat: "🟢 ΥΠΟΤΑΚΤΙΚΗ", q: '«Τρέξε <em>για να</em> προλάβεις το λεωφορείο.» — Τι είδους εξαρτημένη πρόταση;', opts: ['Αιτιολογική', 'Τελική', 'Χρονική', 'Αποτελεσματική'], ans: 1 },
+  { cat: "🟢 ΥΠΟΤΑΚΤΙΚΗ", q: '«<em>Όταν</em> έφτασε, όλοι χειροκρότησαν.» — Τι είδους εξαρτημένη πρόταση;', opts: ['Υποθετική', 'Αιτιολογική', 'Χρονική', 'Τελική'], ans: 2 },
+  { cat: "🟢 ΥΠΟΤΑΚΤΙΚΗ", q: '«Μίλησε τόσο δυνατά <em>ώστε</em> τον άκουσαν όλοι.» — Τι είδους εξαρτημένη;', opts: ['Αποτελεσματική', 'Τελική', 'Χρονική', 'Αιτιολογική'], ans: 0 },
+  { cat: "🟢 ΥΠΟΤΑΚΤΙΚΗ", q: '«<em>Αν</em> βρέξει, δεν πάμε εκδρομή.» — Τι είδους εξαρτημένη πρόταση;', opts: ['Χρονική', 'Εναντιωματική', 'Υποθετική', 'Τελική'], ans: 2 },
+  { cat: "🟢 ΥΠΟΤΑΚΤΙΚΗ", q: 'Ποιος σύνδεσμος εισάγει <em>αιτιολογική</em> εξαρτημένη πρόταση;', opts: ['ώστε', 'για να', 'επειδή', 'αν και'], ans: 2 },
+
+  // ΑΝΤΙΘΕΤΙΚΟΙ & ΕΝΑΝΤΙΩΜΑΤΙΚΕΣ
+  { cat: "🟣 ΑΝΤΙΘΕΤΙΚΟΙ", q: 'Ποιος σύνδεσμος εκφράζει <em>αντίθεση</em> μεταξύ δύο ανεξάρτητων προτάσεων;', opts: ['επειδή', 'αλλά', 'για να', 'ότι'], ans: 1 },
+  { cat: "🟣 ΑΝΤΙΘΕΤΙΚΟΙ", q: '«Προσπάθησε πολύ, ___ δεν τα κατάφερε.» — Συμπλήρωσε:', opts: ['γιατί', 'ώστε', 'όμως', 'όταν'], ans: 2 },
+  { cat: "🟣 ΑΝΤΙΘΕΤΙΚΟΙ", q: '«<em>Αν και</em> ήταν κουρασμένος, δεν παραπονέθηκε.» — Τι εκφράζει ο σύνδεσμος;', opts: ['Αιτία', 'Εναντίωση/Παραχώρηση', 'Σκοπό', 'Αποτέλεσμα'], ans: 1 },
+  { cat: "🟣 ΑΝΤΙΘΕΤΙΚΟΙ", q: 'Ποιος ΔΕΝ είναι αντιθετικός/εναντιωματικός σύνδεσμος;', opts: ['μολονότι', 'ενώ', 'αν και', 'επειδή'], ans: 3 },
+  { cat: "🟣 ΑΝΤΙΘΕΤΙΚΟΙ", q: 'Η έκφραση «<em>όχι μόνο… αλλά και</em>» χρησιμοποιείται για να...', opts: ['εκφράσουμε αιτία', 'δώσουμε έμφαση στο δεύτερο μέρος', 'εισάγουμε εξαρτημένη πρόταση', 'δηλώσουμε χρόνο'], ans: 1 },
+
+  // ΜΕΙΚΤΑ
+  { cat: "🎯 ΜΕΙΚΤΟ", q: '«Ήρθε, είδε, νίκησε.» — Ποιο είδος σύνδεσης;', opts: ['Παρατακτική', 'Υποτακτική', 'Ασύνδετο σχήμα', 'Εναντιωματική'], ans: 2 },
+  { cat: "🎯 ΜΕΙΚΤΟ", q: '«Θέλω <em>να</em> πάω εκδρομή.» — Τι είδους εξαρτημένη πρόταση;', opts: ['Αιτιολογική', 'Αντικειμενική (αντικ. ρήματος)', 'Χρονική', 'Υποθετική'], ans: 1 },
+  { cat: "🎯 ΜΕΙΚΤΟ", q: 'Ποια πρόταση περιέχει <em>παρατακτική αντίθεση</em>;', opts: ['Έφυγε αφού τελείωσε.', 'Έφυγε αλλά ξέχασε τα κλειδιά.', 'Έφυγε για να πάει στο σχολείο.', 'Έφυγε όταν νύχτωσε.'], ans: 1 },
+  { cat: "🎯 ΜΕΙΚΤΟ", q: '«<em>Ενώ</em> έβρεχε, τα παιδιά έπαιζαν έξω.» — Τι εκφράζει;', opts: ['Αιτία', 'Αποτέλεσμα', 'Εναντίωση', 'Σκοπό'], ans: 2 },
+];
+
+// ===== GAME STATE =====
+let questions = [];
+let currentQ = 0;
+let score = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let streak = 0;
+let maxStreak = 0;
+let timerInterval = null;
+let timeLeft = 15;
+let answered = false;
+const TIMER_MAX = 15;
+const CIRCUMFERENCE = 2 * Math.PI * 22; // 138.23
+
+// ===== INIT STARS =====
+(function initStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${Math.random()*3}s;width:${Math.random()>0.7?4:2}px;height:${Math.random()>0.7?4:2}px;`;
+    container.appendChild(s);
+  }
+})();
+
+// ===== SHUFFLE =====
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function startGame() {
+  questions = shuffle(ALL_QUESTIONS);
+  currentQ = 0; score = 0; correctCount = 0; wrongCount = 0; streak = 0; maxStreak = 0;
+  showScreen('quiz-screen');
+  updateScore();
+  loadQuestion();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function loadQuestion() {
+  if (currentQ >= questions.length) { endGame(); return; }
+  answered = false;
+  const q = questions[currentQ];
+
+  document.getElementById('q-category').textContent = q.cat;
+
+  // Build shuffled options but track correct answer
+  const indices = [0,1,2,3];
+  const shuffledIdx = shuffle(indices);
+  const newCorrectPos = shuffledIdx.indexOf(q.ans);
+
+  document.getElementById('q-text').innerHTML = q.q;
+  document.getElementById('q-counter').textContent = `Ερώτηση ${currentQ+1} / ${questions.length}`;
+  document.getElementById('progress-fill').style.width = `${(currentQ/questions.length)*100}%`;
+
+  const grid = document.getElementById('answers-grid');
+  grid.innerHTML = '';
+  const icons = ['▲','●','★','♦'];
+  shuffledIdx.forEach((origIdx, pos) => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    btn.dataset.pos = pos;
+    btn.dataset.isCorrect = (origIdx === q.ans) ? '1' : '0';
+    btn.innerHTML = `<span class="ans-icon">${icons[pos]}</span>${q.opts[origIdx]}`;
+    btn.onclick = () => selectAnswer(btn);
+    grid.appendChild(btn);
+  });
+
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = TIMER_MAX;
+  updateTimer();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimer();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      if (!answered) timeUp();
+    }
+  }, 1000);
+}
+
+function updateTimer() {
+  const num = document.getElementById('timer-num');
+  const arc = document.getElementById('timer-arc');
+  num.textContent = timeLeft;
+  const pct = timeLeft / TIMER_MAX;
+  arc.style.strokeDashoffset = CIRCUMFERENCE * (1 - pct);
+  if (timeLeft <= 5) {
+    arc.style.stroke = '#ff1744';
+    num.style.color = '#ff1744';
+  } else if (timeLeft <= 8) {
+    arc.style.stroke = '#ffd700';
+    num.style.color = '#ffd700';
+  } else {
+    arc.style.stroke = 'var(--cyan)';
+    num.style.color = 'white';
+  }
+}
+
+function timeUp() {
+  answered = true;
+  streak = 0;
+  wrongCount++;
+  // Reveal correct
+  document.querySelectorAll('.ans-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.isCorrect === '1') btn.classList.add('reveal-correct');
+    else btn.style.opacity = '0.3';
+  });
+  showFeedback(false, true);
+  setTimeout(nextQuestion, 1800);
+}
+
+function selectAnswer(btn) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+
+  const isCorrect = btn.dataset.isCorrect === '1';
+
+  document.querySelectorAll('.ans-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.isCorrect === '1') b.classList.add(isCorrect && b === btn ? 'correct' : 'reveal-correct');
+    else if (b === btn) b.classList.add('wrong');
+    else b.style.opacity = '0.35';
+  });
+
+  if (isCorrect) {
+    const pts = Math.max(50, Math.round(50 + timeLeft * 30));
+    score += pts;
+    correctCount++;
+    streak++;
+    if (streak > maxStreak) maxStreak = streak;
+    updateScore();
+    showPointsPopup('+' + pts);
+    if (streak >= 3) showStreakBadge(streak);
+    showFeedback(true, false);
+  } else {
+    wrongCount++;
+    streak = 0;
+    showFeedback(false, false);
+  }
+
+  setTimeout(nextQuestion, 1600);
+}
+
+function updateScore() {
+  document.getElementById('score-val').textContent = score;
+}
+
+function showFeedback(correct, timeout) {
+  const overlay = document.getElementById('feedback-overlay');
+  const emoji = document.getElementById('fb-emoji');
+  const text = document.getElementById('fb-text');
+
+  if (timeout) {
+    emoji.textContent = '⏰';
+    text.textContent = 'Έληξε ο χρόνος!';
+    text.style.color = '#ffd700';
+    overlay.className = 'feedback-overlay show';
+  } else if (correct) {
+    const emojis = ['🎉','✅','🔥','⚡','🌟','👏'];
+    const msgs = ['Σωστό!','Μπράβο!','Τέλεια!','Άριστα!'];
+    emoji.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    text.textContent = msgs[Math.floor(Math.random()*msgs.length)];
+    text.style.color = 'var(--green)';
+    overlay.className = 'feedback-overlay show correct-fb';
+  } else {
+    const emojis = ['❌','😬','💪','🤔'];
+    emoji.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    text.textContent = 'Λάθος!';
+    text.style.color = 'var(--red)';
+    overlay.className = 'feedback-overlay show wrong-fb';
+  }
+
+  setTimeout(() => overlay.className = 'feedback-overlay', 1400);
+}
+
+function showPointsPopup(txt) {
+  const el = document.createElement('div');
+  el.className = 'points-popup';
+  el.textContent = txt;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1300);
+}
+
+function showStreakBadge(n) {
+  const badge = document.getElementById('streak-badge');
+  badge.textContent = `🔥 ${n} στη σειρά!`;
+  badge.style.display = 'block';
+  setTimeout(() => badge.style.display = 'none', 1800);
+}
+
+function nextQuestion() {
+  currentQ++;
+  loadQuestion();
+}
+
+function endGame() {
+  showScreen('end-screen');
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('stat-correct').textContent = correctCount;
+  document.getElementById('stat-wrong').textContent = wrongCount;
+  document.getElementById('stat-streak').textContent = maxStreak;
+
+  const pct = correctCount / questions.length;
+  let trophy, title, stars, msg;
+  if (pct >= 0.9) {
+    trophy = '🏆'; title = 'Απίστευτο!'; stars = '⭐⭐⭐';
+    msg = 'Είσαι πρωταθλητής της σύνδεσης προτάσεων! Εξαιρετική δουλειά!';
+  } else if (pct >= 0.7) {
+    trophy = '🥈'; title = 'Πολύ καλά!'; stars = '⭐⭐';
+    msg = 'Έχεις καταλάβει πολύ καλά την ύλη! Λίγη ακόμα εξάσκηση και φτάνεις στην κορυφή!';
+  } else if (pct >= 0.5) {
+    trophy = '🥉'; title = 'Συνέχισε!'; stars = '⭐';
+    msg = 'Καλή αρχή! Ξαναδιάβασε τη θεωρία και παίξε ξανά για καλύτερο αποτέλεσμα!';
+  } else {
+    trophy = '💪'; title = 'Προσπάθησε ξανά!'; stars = '☆☆☆';
+    msg = 'Μην τα παρατάς! Διάβασε τη θεωρία και ξαναπαίξε — μπορείς πολύ καλύτερα!';
+  }
+
+  document.getElementById('trophy').textContent = trophy;
+  document.getElementById('end-title').textContent = title;
+  document.getElementById('stars-row').textContent = stars;
+  document.getElementById('result-msg').textContent = msg;
+
+  if (pct >= 0.7) launchConfetti();
+}
+
+function launchConfetti() {
+  const colors = ['#ffd700','#ff4d8d','#00e5ff','#00e676','#ff7b00','#fff'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.cssText = `
+      left:${Math.random()*100}%;
+      top:-10px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+      --dur:${1.5+Math.random()*2}s;
+      --delay:${Math.random()*1}s;
+      --drift:${(Math.random()-0.5)*200}px;
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+  }
+}
+
+function restartGame() {
+  startGame();
+}
+</script>
+</body>
+</html>
